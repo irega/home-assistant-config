@@ -24,6 +24,9 @@ homeassistant:
 
 lovelace:
   mode: yaml
+  resources:
+    - url: /local/custom_ui/vertical-stack-in-card.js
+      type: module
 
 zone:
 
