@@ -23,6 +23,9 @@ homeassistant:
     unit_system: metric
     time_zone: !secret time_zone
 
+lovelace:
+    mode: yaml
+    
 zone:
 
 http:

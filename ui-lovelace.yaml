@@ -1,0 +1,352 @@
+ 
+resources:
+  - type: js
+    url: /local/custom_ui/vertical-stack-in-card.js?v=0.1.3
+title: Río Segre
+views:
+  - badges:
+      - entity: binary_sensor.door_window_sensor_158d0003ce68d2
+      - entity: binary_sensor.motion_sensor_158d00044cce1a
+      - entity: sensor.illumination_04cf8cf312cd
+    cards:
+      - entity: alarm_control_panel.house
+        name: Alarma
+        states:
+          - arm_home
+          - arm_away
+        type: alarm-panel
+      - entity: light.gateway_light_04cf8cf312cd
+        theme: default
+        type: light
+    path: ''
+    title: Entrada/Pasillo
+  - badges:
+      - entity: sensor.vacuum_status
+      - entity: sensor.vacuum_do_not_disturb
+      - entity: sensor.vacuum_cleaning_time
+      - entity: sensor.vacuum_cleaned_area
+      - entity: sensor.vacuum_cleaner_error_sensor
+    cards:
+      - entity: climate.netatmo_smart_thermostat
+        type: thermostat
+      - entity: switch.plug_158d000310c4a0
+        hold_action:
+          action: more-info
+        name: Luz cómoda
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
+      - entity: media_player.tv_salon
+        type: media-control
+      - cards:
+          - elements:
+              - entity: vacuum.xiaomi_vacuum_cleaner
+                hold_action:
+                  action: more-info
+                icon: 'mdi:information-outline'
+                style:
+                  color: '#3090C7'
+                  left: 10%
+                  top: 90%
+                type: icon
+              - hold_action:
+                  action: call-service
+                  service: vacuum.locate
+                  service_data:
+                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                icon: 'mdi:bell-ring'
+                style:
+                  color: '#3090C7'
+                  left: 80%
+                  top: 90%
+                type: icon
+              - hold_action:
+                  action: call-service
+                  service: vacuum.clean_spot
+                  service_data:
+                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                icon: 'mdi:crosshairs'
+                style:
+                  color: '#3090C7'
+                  left: 68%
+                  top: 90%
+                type: icon
+              - hold_action:
+                  action: call-service
+                  service: vacuum.return_to_base
+                  service_data:
+                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                icon: 'mdi:home'
+                style:
+                  color: '#3090C7'
+                  left: 56%
+                  top: 90%
+                type: icon
+              - hold_action:
+                  action: call-service
+                  service: vacuum.stop
+                  service_data:
+                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                icon: 'mdi:stop'
+                style:
+                  color: '#3090C7'
+                  left: 44%
+                  top: 90%
+                type: icon
+              - hold_action:
+                  action: call-service
+                  service: vacuum.pause
+                  service_data:
+                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                icon: 'mdi:pause'
+                style:
+                  color: '#3090C7'
+                  left: 32%
+                  top: 90%
+                type: icon
+              - hold_action:
+                  action: call-service
+                  service: vacuum.start
+                  service_data:
+                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                icon: 'mdi:play'
+                style:
+                  color: '#3090C7'
+                  left: 20%
+                  top: 90%
+                type: icon
+              - entity: sensor.vacuum_operation
+                style:
+                  background-color: '#3090C7'
+                  border-color: 'rgb(34, 154, 210)'
+                  border-radius: 6px
+                  color: 'rgb(255, 255, 255)'
+                  font-family: Trebuchet MS
+                  font-size: 90%
+                  font-weight: bold
+                  left: 1%
+                  pointer-events: none
+                  top: 10%
+                  transform: 'translate(0%,-50%)'
+                type: state-label
+              - entity: sensor.vacuum_accessories
+                style:
+                  background-color: '#3090C7'
+                  border-color: 'rgb(34, 154, 210)'
+                  border-radius: 6px
+                  color: 'rgb(255, 255, 255)'
+                  font-family: Trebuchet MS
+                  font-size: 90%
+                  font-weight: bold
+                  pointer-events: none
+                  right: 1%
+                  top: 10%
+                  transform: 'translate(0%,-50%)'
+                type: state-label
+              - entity: vacuum.xiaomi_vacuum_cleaner
+                style:
+                  background-color: '#cccccc'
+                  border-color: 'rgb(34, 154, 210)'
+                  border-radius: 6px
+                  color: 'rgb(255, 255, 255)'
+                  font-family: Trebuchet MS
+                  font-size: 150%
+                  font-weight: bold
+                  right: 38%
+                  top: 14%
+                  transform: 'translate(0%,-50%)'
+                tap_action: more-info
+                type: state-label
+              - entity: sensor.vacuum_cleanmainbrush
+                style:
+                  border-color: 'rgb(34, 154, 210)'
+                  border-right-style: solid
+                  color: '#ffffff'
+                  font-family: Trebuchet MS
+                  font-size: 76%
+                  font-weight: bold
+                  pointer-events: none
+                  right: 1%
+                  top: 35%
+                  transform: 'translate(0%,-50%)'
+                type: state-label
+              - entity: sensor.vacuum_cleansidebrush
+                style:
+                  border-color: 'rgb(34, 154, 210)'
+                  border-right-style: solid
+                  color: '#ffffff'
+                  font-family: Trebuchet MS
+                  font-size: 76%
+                  font-weight: bold
+                  pointer-events: none
+                  right: 1%
+                  top: 45%
+                  transform: 'translate(0%,-50%)'
+                type: state-label
+              - entity: sensor.vacuum_cleanfilter
+                style:
+                  border-color: 'rgb(34, 154, 210)'
+                  border-right-style: solid
+                  color: '#ffffff'
+                  font-family: Trebuchet MS
+                  font-size: 76%
+                  font-weight: bold
+                  opacity: 0.8
+                  pointer-events: none
+                  right: 1%
+                  top: 55%
+                  transform: 'translate(0%,-50%)'
+                type: state-label
+              - entity: sensor.vacuum_sensordirtyleft
+                style:
+                  border-color: 'rgb(34, 154, 210)'
+                  border-right-style: solid
+                  color: '#ffffff'
+                  font-family: Trebuchet MS
+                  font-size: 76%
+                  font-weight: bold
+                  pointer-events: none
+                  right: 1%
+                  top: 65%
+                  transform: 'translate(0%,-50%)'
+                type: state-label
+              - entity: sensor.vacuum_status
+                style:
+                  border-color: '#3090C7'
+                  border-left-style: solid
+                  color: '#ffffff'
+                  font-family: Trebuchet MS
+                  font-size: 80%
+                  font-weight: bold
+                  left: 1%
+                  pointer-events: none
+                  top: 40%
+                  transform: 'translate(0%,-50%)'
+                type: state-label
+              - entity: sensor.vacuum_battery
+                style:
+                  border-color: 'rgb(34, 154, 210)'
+                  border-left-style: solid
+                  color: '#ffffff'
+                  font-family: Trebuchet MS
+                  font-size: 80%
+                  font-weight: bold
+                  left: 1%
+                  pointer-events: none
+                  top: 50%
+                  transform: 'translate(0%,-50%)'
+                type: state-label
+              - entity: sensor.vacuum_fan_speed
+                style:
+                  border-color: 'rgb(34, 154, 210)'
+                  border-left-style: solid
+                  color: '#ffffff'
+                  font-family: Trebuchet MS
+                  font-size: 80%
+                  font-weight: bold
+                  left: 1%
+                  pointer-events: none
+                  top: 60%
+                  transform: 'translate(0%,-50%)'
+                type: state-label
+              - entity: sensor.vacuum_cleaned_area
+                prefix: 'Area:'
+                style:
+                  color: '#84a6ba'
+                  font-family: Trebuchet MS
+                  font-size: 80%
+                  font-weight: bold
+                  left: 31%
+                  pointer-events: none
+                  top: 79%
+                  transform: 'translate(0%,-50%)'
+                type: state-label
+              - entity: sensor.vacuum_cleaning_time
+                prefix: 'Time:'
+                style:
+                  color: '#84a6ba'
+                  font-family: Trebuchet MS
+                  font-size: 80%
+                  font-weight: bold
+                  left: 51%
+                  pointer-events: none
+                  top: 79%
+                  transform: 'translate(0%,-50%)'
+                type: state-label
+            image: /local/s50.jpg
+            title: Aspirador
+            type: picture-elements
+        type: 'custom:vertical-stack-in-card'
+    path: default_view
+    title: Salón
+  - badges: []
+    cards:
+      - entity: media_player.tv_cocina
+        type: media-control
+    path: cocina
+    title: Cocina
+  - badges: []
+    cards:
+      - entities:
+          - entity: light.luz_espejo_bano_1
+          - entity: light.luz_espejo_bano_2
+        show_header_toggle: true
+        title: Luz espejo Baño
+        type: entities
+      - entity: light.luz_espejo_bano_1
+        type: light
+      - entity: light.luz_espejo_bano_2
+        type: light
+    path: bano
+    title: Baño
+  - badges: []
+    cards:
+      - entity: binary_sensor.switch_158d000373c0dc
+        hold_action:
+          action: more-info
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
+      - entity: light.luz_dormitorio
+        type: light
+    path: dormitorio
+    title: Dormitorio
+  - badges:
+      - entity: sun.sun
+    cards:
+      - entity: weather.casa
+        type: weather-forecast
+      - entities:
+          - entity: automation.apagar_luz_entrada_cuando_no_hay_movimiento
+          - entity: automation.encender_luz_entrada_cuando_hay_movimiento
+          - entity: automation.limpiar_entre_semana
+          - entity: automation.limpiar_fin_de_semana
+          - entity: automation.notificar_comienzo_limpieza_aspirador
+          - entity: automation.notificar_error_aspirador
+          - entity: automation.notificar_estado_cargando_aspirador
+          - entity: automation.notificar_limpieza_finalizada_aspirador
+          - entity: automation.notificar_problema_resuelto_aspirador
+          - entity: automation.reproducir_sonido_al_abrir_puerta_entrada
+        show_header_toggle: true
+        title: Automatizaciones
+        type: entities
+      - entities:
+          - entity: script.1578480478781
+          - entity: script.1580928997498
+          - entity: script.vacuum_banio
+          - entity: script.vacuum_cocina
+          - entity: script.vacuum_despacho
+          - entity: script.vacuum_entrada
+          - entity: script.vacuum_pasillo
+          - entity: script.vacuum_vestidor
+          - entity: script.vacuum_dormitorio
+          - entity: script.vacuum_salon
+        show_header_toggle: false
+        title: Scripts
+        type: entities
+    path: general
+    title: General
