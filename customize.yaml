@@ -1,0 +1,32 @@
+light.gateway_light_04cf8cf312cd:
+  friendly_name: Gateway entrada
+binary_sensor.door_window_sensor_158d0003ce68d2:
+  friendly_name: Sensor puerta entrada
+binary_sensor.motion_sensor_158d00044cce1a:
+  friendly_name: Sensor movimiento pasillo
+sensor.illumination_04cf8cf312cd:
+  friendly_name: Sensor iluminación pasillo
+climate.netatmo_smart_thermostat:
+  friendly_name: Termostato
+vacuum.xiaomi_vacuum_cleaner:
+  friendly_name: Aspirador
+sensor.vacuum_status:
+  friendly_name: Estado aspirador
+sensor.vacuum_do_not_disturb:
+  friendly_name: No molestar aspirador
+sensor.vacuum_cleaning_time:
+  friendly_name: Ultimo ciclo aspirador
+sensor.vacuum_cleaner_error_sensor:
+  friendly_name: Error aspirador
+sensor.vacuum_cleaned_area:
+  friendly_name: Area aspirador
+switch.plug_158d000310c4a0:
+  friendly_name: Luz cómoda
+binary_sensor.switch_158d000373c0dc:
+  friendly_name: Interruptor mesilla
+binary_sensor.cube_158d0002a6f5e7:
+  friendly_name: Cubo salón
+media_player.tv_salon:
+  friendly_name: TV salón
+media_player.tv_cocina:
+  friendly_name: TV cocina

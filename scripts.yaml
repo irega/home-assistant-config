@@ -1,0 +1,113 @@
+vacuum_cocina:
+  alias: Limpiar cocina
+  sequence:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        repeats: "1"
+        zone:
+          - - 16166
+            - 28042
+            - 18516
+            - 33192
+      service: vacuum.xiaomi_clean_zone
+vacuum_dormitorio:
+  alias: Limpiar dormitorio
+  sequence:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        repeats: "1"
+        zone:
+          - - 23704
+            - 28691
+            - 27204
+            - 32191
+      service: vacuum.xiaomi_clean_zone
+vacuum_despacho:
+  alias: Limpiar despacho
+  sequence:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        repeats: "1"
+        zone:
+          - - 21620
+            - 29744
+            - 23770
+            - 33344
+      service: vacuum.xiaomi_clean_zone
+vacuum_vestidor:
+  alias: Limpiar vestidor
+  sequence:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        repeats: "1"
+        zone:
+          - - 18558
+            - 29676
+            - 20708
+            - 33276
+      service: vacuum.xiaomi_clean_zone
+vacuum_entrada:
+  alias: Limpiar entrada
+  sequence:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        repeats: "1"
+        zone:
+          - - 19765
+            - 26334
+            - 21365
+            - 28734
+      service: vacuum.xiaomi_clean_zone
+vacuum_pasillo:
+  alias: Limpiar pasillo
+  sequence:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        repeats: "1"
+        zone:
+          - - 18630
+            - 28678
+            - 24380
+            - 29728
+      service: vacuum.xiaomi_clean_zone
+vacuum_salon:
+  alias: Limpiar salón
+  sequence:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        repeats: "1"
+        zone:
+          - - 21328
+            - 25057
+            - 26878
+            - 28657
+      service: vacuum.xiaomi_clean_zone
+vacuum_banio:
+  alias: Limpiar banio
+  sequence:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        repeats: "1"
+        zone:
+          - - 17174
+            - 26264
+            - 19774
+            - 28064
+      service: vacuum.xiaomi_clean_zone
+"1578480478781":
+  alias: Limpiar casa
+  sequence:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+      service: vacuum.start
+"1580928997498":
+  alias: Parar limpieza
+  sequence:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+      service: vacuum.stop
+    - delay:
+        seconds: 1
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+      service: vacuum.return_to_base

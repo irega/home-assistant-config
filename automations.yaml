@@ -1,0 +1,141 @@
+- id: ASPIRADORA Notificar ERROR
+  alias: Notificar error aspirador
+  trigger:
+    - entity_id: sensor.vacuum_cleaner_status_sensor
+      platform: state
+      to: Error
+    - entity_id: sensor.vacuum_cleaner_status_sensor
+      platform: state
+      to: In Error
+    - entity_id: sensor.vacuum_cleaner_status_sensor
+      platform: state
+      to: Charging Error
+  action:
+    - data:
+        message:
+          "{% if is_state('sensor.vacuum_cleaner_error_sensor', 'No Error') \
+          \ %}\n  {{states.sensor.vacuum_status.state}}\n{% else %}\n  {{states.sensor.vacuum_cleaner_error_sensor.state}}\n\
+          {% endif %}"
+        title: "*Aspiradora ERROR*"
+      service: notify.telegram
+- id: ASPIRADORA Notificar PROBLEMA RESUELTO
+  alias: Notificar problema resuelto aspirador
+  trigger:
+    - entity_id: sensor.vacuum_cleaner_error_sensor
+      platform: state
+      to: No Error
+  action:
+    - data:
+        message: Problema resuelto.
+        title: "*Aspiradora*"
+      service: notify.telegram
+- id: ASPIRADORA Notificar COMIENZO LIMPIEZA
+  alias: Notificar comienzo limpieza aspirador
+  trigger:
+    - entity_id: vacuum.xiaomi_vacuum_cleaner
+      platform: state
+      to: cleaning
+  action:
+    - data:
+        message: Iniciando la limpieza.
+        title: "*Aspiradora*"
+      service: notify.telegram
+- id: ASPIRADORA Notificar LIMPIEZA FINALIZADA
+  alias: Notificar limpieza finalizada aspirador
+  trigger:
+    - entity_id: vacuum.xiaomi_vacuum_cleaner
+      platform: state
+      to: returning
+  action:
+    - data:
+        message: Volviendo a la base de carga.
+        title: "*Aspiradora*"
+      service: notify.telegram
+- id: ASPIRADORA Notificar CARGANDO
+  alias: Notificar estado cargando aspirador
+  trigger:
+    - entity_id: vacuum.xiaomi_vacuum_cleaner
+      platform: state
+      to: docked
+  action:
+    - data:
+        message: En la base de carga y cargando.
+        title: "*Aspiradora*"
+      service: notify.telegram
+- id: ASPIRADORA Limpiar entre semana
+  alias: Limpiar entre semana
+  description: ""
+  trigger:
+    - at: "18:00"
+      platform: time
+  condition:
+    - condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+  action:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+      service: vacuum.start
+- id: ASPIRADORA Limpiar fin de semana
+  alias: Limpiar fin de semana
+  description: ""
+  trigger:
+    - at: "20:00"
+      platform: time
+  condition:
+    - condition: time
+      weekday:
+        - fri
+        - sat
+        - sun
+  action:
+    - data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+      service: vacuum.start
+- id: "1578412911487"
+  alias: Encender luz entrada cuando hay movimiento
+  description: ""
+  trigger:
+    - entity_id: binary_sensor.motion_sensor_158d00044cce1a
+      from: "off"
+      platform: state
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: sun.sun
+      state: below_horizon
+  action:
+    - data:
+        entity_id: light.gateway_light_04cf8cf312cd
+      service: light.turn_on
+- id: "1578413039150"
+  alias: Apagar luz entrada cuando no hay movimiento
+  description: ""
+  trigger:
+    - entity_id: binary_sensor.motion_sensor_158d00044cce1a
+      from: "on"
+      platform: state
+      to: "off"
+  condition: []
+  action:
+    - data:
+        entity_id: light.gateway_light_04cf8cf312cd
+      service: light.turn_off
+- id: "1578413858931"
+  alias: Reproducir sonido al abrir puerta entrada
+  description: ""
+  trigger:
+    - entity_id: binary_sensor.door_window_sensor_158d0003ce68d2
+      from: "off"
+      platform: state
+      to: "on"
+  condition: []
+  action:
+    - data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 10
+        ringtone_vol: 5
+      service: xiaomi_aqara.play_ringtone

@@ -1,0 +1,5 @@
+luz_espejo_bano:
+  name: Luz espejo Baño
+  entities:
+    - light.luz_bano_1
+    - light.luz_bano_2
