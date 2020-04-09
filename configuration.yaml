@@ -1,4 +1,3 @@
-
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
@@ -15,27 +14,27 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 
 homeassistant:
-    customize: !include customize.yaml
-    name: !secret home_name
-    latitude: !secret latitude
-    longitude: !secret longitude
-    elevation: !secret elevation
-    unit_system: metric
-    time_zone: !secret time_zone
+  customize: !include customize.yaml
+  name: !secret home_name
+  latitude: !secret latitude
+  longitude: !secret longitude
+  elevation: !secret elevation
+  unit_system: metric
+  time_zone: !secret time_zone
 
 lovelace:
-    mode: yaml
-    
+  mode: yaml
+
 zone:
 
 http:
   ssl_certificate: /ssl/fullchain.pem
-  ssl_key: /ssl/privkey.pem 
+  ssl_key: /ssl/privkey.pem
   base_url: !secret base_url
 
 vacuum:
   - platform: xiaomi_miio
-    host: !secret vacuum_ip 
+    host: !secret vacuum_ip
     token: !secret vacuum_token
 
 sensor:
@@ -45,7 +44,7 @@ sensor:
         friendly_name: Estado
         entity_id:
           - vacuum.xiaomi_vacuum_cleaner
-        value_template: 'Estado: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.status }}'
+        value_template: "Estado: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.status }}"
         icon_template: >
           {% set val =  states.vacuum.xiaomi_vacuum_cleaner.attributes.status  %}
           {% if val == 'Charging' %}
@@ -65,61 +64,61 @@ sensor:
         friendly_name: Velocidad ventilador
         entity_id:
           - vacuum.xiaomi_vacuum_cleaner
-        value_template: 'Modo: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.fan_speed }}'
-        icon_template: 'mdi:speedometer'
+        value_template: "Modo: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.fan_speed }}"
+        icon_template: "mdi:speedometer"
       vacuum_battery:
         friendly_name: Bateria
         entity_id:
           - vacuum.xiaomi_vacuum_cleaner
-        value_template: 'Bateria: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_level }}'
-        unit_of_measurement: '%'
-        icon_template: '{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_icon }}'
+        value_template: "Bateria: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_level }}"
+        unit_of_measurement: "%"
+        icon_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_icon }}"
       vacuum_cleaning_time:
         friendly_name: Ultimo ciclo
         entity_id:
           - vacuum.xiaomi_vacuum_cleaner
-        value_template: '{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaning_time }}'
-        icon_template: 'mdi:timer'
+        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaning_time }}"
+        icon_template: "mdi:timer"
       vacuum_cleaned_area:
         friendly_name: Area ultimo ciclo
-        unit_of_measurement: 'm ²'
+        unit_of_measurement: "m ²"
         entity_id:
           - vacuum.xiaomi_vacuum_cleaner
-        value_template: '{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaned_area }}'
-        icon_template: 'mdi:ruler'
+        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaned_area }}"
+        icon_template: "mdi:ruler"
       vacuum_cleanmainbrush:
         friendly_name: Reemplazo cepillo principal
-        unit_of_measurement: 'h'
+        unit_of_measurement: "h"
         entity_id:
           - vacuum.xiaomi_vacuum_cleaner
-        value_template: 'Cepillo principal: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.main_brush_left }}'
-        icon_template: 'mdi:screwdriver'
+        value_template: "Cepillo principal: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.main_brush_left }}"
+        icon_template: "mdi:screwdriver"
       vacuum_cleansidebrush:
         friendly_name: Reemplazo cepillo lateral
-        unit_of_measurement: 'h'
+        unit_of_measurement: "h"
         entity_id:
           - vacuum.xiaomi_vacuum_cleaner
-        value_template: 'Cepillo lateral: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.side_brush_left }}'
-        icon_template: 'mdi:screwdriver'
+        value_template: "Cepillo lateral: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.side_brush_left }}"
+        icon_template: "mdi:screwdriver"
       vacuum_cleanfilter:
         friendly_name: Reemplazo filtro
-        unit_of_measurement: 'h'
+        unit_of_measurement: "h"
         entity_id:
           - vacuum.xiaomi_vacuum_cleaner
-        value_template: 'Filtro: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.filter_left }}'
-        icon_template: 'mdi:screwdriver'
+        value_template: "Filtro: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.filter_left }}"
+        icon_template: "mdi:screwdriver"
       vacuum_sensordirtyleft:
         friendly_name: Limpieza sensores
-        unit_of_measurement: 'h'
+        unit_of_measurement: "h"
         entity_id:
           - vacuum.xiaomi_vacuum_cleaner
-        value_template: 'Sensores: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.sensor_dirty_left }}'
-        icon_template: 'mdi:screwdriver'
+        value_template: "Sensores: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.sensor_dirty_left }}"
+        icon_template: "mdi:screwdriver"
       vacuum_do_not_disturb:
         friendly_name: No molestar
         entity_id:
           - vacuum.xiaomi_vacuum_cleaner
-        value_template: '{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.do_not_disturb }}'
+        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.do_not_disturb }}"
         icon_template: >
           {% set val =  states.vacuum.xiaomi_vacuum_cleaner.attributes.do_not_disturb  %}
           {% if val == 'on' %}
@@ -129,10 +128,10 @@ sensor:
           {% endif %}
       vacuum_operation:
         friendly_name: Estado
-        value_template: 'Estado'
+        value_template: "Estado"
       vacuum_accessories:
         friendly_name: Mantenimiento
-        value_template: 'Mantenimiento'  
+        value_template: "Mantenimiento"
       vacuum_cleaner_error_sensor:
         friendly_name: Error
         value_template: >-
@@ -153,24 +152,34 @@ notify:
     platform: telegram
     chat_id: !secret telegram_chat_id
 
-media_player:
-  - platform: samsungtv_custom
-    host: !secret tv_cocina_ip
-    port: 8002
-    mac: !secret tv_cocina_mac
+# media_player:
+#   - platform: samsungtv_custom
+#     host: !secret tv_cocina_ip
+#     port: 8002
+#     mac: !secret tv_cocina_mac
+#     name: TV Cocina
+
+#   - platform: samsungtv_custom
+#     host: !secret tv_salon_ip
+#     port: 8002
+#     mac: !secret tv_salon_mac
+#     name: TV Salon
+#     source_list: '{"RaspberryPi": "KEY_HDMI1", "Bluray": "KEY_HDMI2"}'
+
+wake_on_lan:
+
+samsungtv:
+  - host: !secret tv_cocina_ip
     name: TV Cocina
-  
-  - platform: samsungtv_custom
-    host: !secret tv_salon_ip
-    port: 8002
-    mac: !secret tv_salon_mac
-    name: TV Salon
-    source_list: '{"RaspberryPi": "KEY_HDMI1", "Bluray": "KEY_HDMI2"}'
-    
+    turn_on_action:
+      - service: wake_on_lan.send_magic_packet
+        data:
+          mac: !secret tv_cocina_mac
+
 api:
 alexa:
   smart_home:
-  
+
 xiaomi_aqara:
   discovery_retry: 5
   gateways:
@@ -189,7 +198,7 @@ light:
     host: !secret luz_espejo_bano_2_ip
     token: !secret luz_espejo_bano_2_token
     model: philips.light.bulb
-    
+
 discovery:
   ignore:
     - yeelight
