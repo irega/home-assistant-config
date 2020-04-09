@@ -152,29 +152,19 @@ notify:
     platform: telegram
     chat_id: !secret telegram_chat_id
 
-# media_player:
-#   - platform: samsungtv_custom
-#     host: !secret tv_cocina_ip
-#     port: 8002
-#     mac: !secret tv_cocina_mac
-#     name: TV Cocina
-
-#   - platform: samsungtv_custom
-#     host: !secret tv_salon_ip
-#     port: 8002
-#     mac: !secret tv_salon_mac
-#     name: TV Salon
-#     source_list: '{"RaspberryPi": "KEY_HDMI1", "Bluray": "KEY_HDMI2"}'
-
-wake_on_lan:
-
-samsungtv:
-  - host: !secret tv_cocina_ip
+media_player:
+  - platform: samsungtv_custom
+    host: !secret tv_cocina_ip
+    port: 8002
+    mac: !secret tv_cocina_mac
     name: TV Cocina
-    turn_on_action:
-      - service: wake_on_lan.send_magic_packet
-        data:
-          mac: !secret tv_cocina_mac
+
+  - platform: samsungtv_custom
+    host: !secret tv_salon_ip
+    port: 8002
+    mac: !secret tv_salon_mac
+    name: TV Salon
+    source_list: '{"RaspberryPi": "KEY_HDMI1", "Bluray": "KEY_HDMI2"}'
 
 api:
 alexa:
