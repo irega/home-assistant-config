@@ -3,9 +3,10 @@ xiaomi_aqara:
   gateways:
     - key: !secret aqara_gateway_key
 
-customize:
-light.gateway_light_04cf8cf312cd:
-  friendly_name: Gateway entrada
+homeassistant:
+  customize:
+    light.gateway_light_04cf8cf312cd:
+      friendly_name: Gateway entrada
 
 alarm_control_panel: !include /config/resources/bwalarm/bwalarm.yaml
 

@@ -3,19 +3,20 @@ vacuum:
     host: !secret vacuum_ip
     token: !secret vacuum_token
 
-customize:
-vacuum.xiaomi_vacuum_cleaner:
-  friendly_name: Aspirador
-sensor.vacuum_status:
-  friendly_name: Estado aspirador
-sensor.vacuum_do_not_disturb:
-  friendly_name: No molestar aspirador
-sensor.vacuum_cleaning_time:
-  friendly_name: Ultimo ciclo aspirador
-sensor.vacuum_cleaner_error_sensor:
-  friendly_name: Error aspirador
-sensor.vacuum_cleaned_area:
-  friendly_name: Area aspirador
+homeassistant:
+  customize:
+    vacuum.xiaomi_vacuum_cleaner:
+      friendly_name: Aspirador
+    sensor.vacuum_status:
+      friendly_name: Estado aspirador
+    sensor.vacuum_do_not_disturb:
+      friendly_name: No molestar aspirador
+    sensor.vacuum_cleaning_time:
+      friendly_name: Ultimo ciclo aspirador
+    sensor.vacuum_cleaner_error_sensor:
+      friendly_name: Error aspirador
+    sensor.vacuum_cleaned_area:
+      friendly_name: Area aspirador
 
 sensor:
   - platform: template
@@ -221,19 +222,19 @@ automation:
         service: vacuum.start
 
 script:
-  - vacuum_cocina:
-      alias: Limpiar cocina
-      sequence:
-        - data:
-            entity_id: vacuum.xiaomi_vacuum_cleaner
-            repeats: "1"
-            zone:
-              - - 16166
-                - 28042
-                - 18516
-                - 33192
-          service: vacuum.xiaomi_clean_zone
-  - vacuum_dormitorio:
+  vacuum_cocina:
+    alias: Limpiar cocina
+    sequence:
+      - data:
+          entity_id: vacuum.xiaomi_vacuum_cleaner
+          repeats: "1"
+          zone:
+            - - 16166
+            - 28042
+            - 18516
+            - 33192
+        service: vacuum.xiaomi_clean_zone
+  vacuum_dormitorio:
     alias: Limpiar dormitorio
     sequence:
       - data:
@@ -244,8 +245,8 @@ script:
               - 28691
               - 27204
               - 32191
-      service: vacuum.xiaomi_clean_zone
-  - vacuum_despacho:
+        service: vacuum.xiaomi_clean_zone
+  vacuum_despacho:
     alias: Limpiar despacho
     sequence:
       - data:
@@ -257,7 +258,7 @@ script:
               - 23770
               - 33344
         service: vacuum.xiaomi_clean_zone
-  - vacuum_vestidor:
+  vacuum_vestidor:
     alias: Limpiar vestidor
     sequence:
       - data:
@@ -269,7 +270,7 @@ script:
               - 20708
               - 33276
         service: vacuum.xiaomi_clean_zone
-  - vacuum_entrada:
+  vacuum_entrada:
     alias: Limpiar entrada
     sequence:
       - data:
@@ -281,7 +282,7 @@ script:
               - 21365
               - 28734
         service: vacuum.xiaomi_clean_zone
-  - vacuum_pasillo:
+  vacuum_pasillo:
     alias: Limpiar pasillo
     sequence:
       - data:
@@ -293,7 +294,7 @@ script:
               - 24380
               - 29728
         service: vacuum.xiaomi_clean_zone
-  - vacuum_salon:
+  vacuum_salon:
     alias: Limpiar salón
     sequence:
       - data:
@@ -305,7 +306,7 @@ script:
               - 26878
               - 28657
         service: vacuum.xiaomi_clean_zone
-  - vacuum_banio:
+  vacuum_banio:
     alias: Limpiar banio
     sequence:
       - data:
@@ -317,13 +318,13 @@ script:
               - 19774
               - 28064
         service: vacuum.xiaomi_clean_zone
-  - vacuum_limpiar_casa:
+  vacuum_limpiar_casa:
     alias: Limpiar casa
     sequence:
       - data:
           entity_id: vacuum.xiaomi_vacuum_cleaner
         service: vacuum.start
-  - vacuum_parar_limpieza:
+  vacuum_parar_limpieza:
     alias: Parar limpieza
     sequence:
       - data:

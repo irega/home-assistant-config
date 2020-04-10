@@ -10,8 +10,9 @@ samsungtv:
         data:
           mac: !secret tv_cocina_mac
 
-customize:
-media_player.tv_salon:
-  friendly_name: TV salón
-media_player.tv_cocina:
-  friendly_name: TV cocina
+homeassistant:
+  customize:
+    media_player.tv_salon:
+      friendly_name: TV salón
+    media_player.tv_cocina:
+      friendly_name: TV cocina

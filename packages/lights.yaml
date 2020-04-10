@@ -19,9 +19,10 @@ yeelight:
     !secret luz_dormitorio_ip:
       name: Luz Dormitorio
 
-customize:
-switch.plug_158d000310c4a0:
-  friendly_name: Luz cómoda
+homeassistant:
+  customize:
+    switch.plug_158d000310c4a0:
+      friendly_name: Luz cómoda
 
 group:
 luz_espejo_bano:

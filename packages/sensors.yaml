@@ -1,13 +1,14 @@
-customize:
-binary_sensor.door_window_sensor_158d0003ce68d2:
-  friendly_name: Sensor puerta entrada
-binary_sensor.motion_sensor_158d00044cce1a:
-  friendly_name: Sensor movimiento pasillo
-sensor.illumination_04cf8cf312cd:
-  friendly_name: Sensor iluminación pasillo
-climate.netatmo_smart_thermostat:
-  friendly_name: Termostato
-binary_sensor.switch_158d000373c0dc:
-  friendly_name: Interruptor mesilla
-binary_sensor.cube_158d0002a6f5e7:
-  friendly_name: Cubo salón
+homeassistant:
+  customize:
+    binary_sensor.door_window_sensor_158d0003ce68d2:
+      friendly_name: Sensor puerta entrada
+    binary_sensor.motion_sensor_158d00044cce1a:
+      friendly_name: Sensor movimiento pasillo
+    sensor.illumination_04cf8cf312cd:
+      friendly_name: Sensor iluminación pasillo
+    climate.netatmo_smart_thermostat:
+      friendly_name: Termostato
+    binary_sensor.switch_158d000373c0dc:
+      friendly_name: Interruptor mesilla
+    binary_sensor.cube_158d0002a6f5e7:
+      friendly_name: Cubo salón
