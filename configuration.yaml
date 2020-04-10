@@ -1,26 +1,13 @@
-# Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
-# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-# http:
-#   base_url: example.duckdns.org:8123
-
-# Text to speech
-tts:
-  - platform: google_translate
-
-group: !include groups.yaml
-automation: !include automations.yaml
-script: !include scripts.yaml
-
 homeassistant:
-  customize: !include customize.yaml
   name: !secret home_name
   latitude: !secret latitude
   longitude: !secret longitude
   elevation: !secret elevation
   unit_system: metric
   time_zone: !secret time_zone
+  packages: !include_dir_named packages
 
 lovelace:
   mode: yaml
@@ -28,175 +15,17 @@ lovelace:
     - url: /local/custom_ui/vertical-stack-in-card.js
       type: module
 
-zone:
-
 http:
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
   base_url: !secret base_url
 
-vacuum:
-  - platform: xiaomi_miio
-    host: !secret vacuum_ip
-    token: !secret vacuum_token
-
-sensor:
-  - platform: template
-    sensors:
-      vacuum_status:
-        friendly_name: Estado
-        entity_id:
-          - vacuum.xiaomi_vacuum_cleaner
-        value_template: "Estado: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.status }}"
-        icon_template: >
-          {% set val =  states.vacuum.xiaomi_vacuum_cleaner.attributes.status  %}
-          {% if val == 'Charging' %}
-            mdi:battery-charging
-          {% elif val == 'Cleaning' %}
-            mdi:move-resize
-          {% elif val == 'Returning home' %}
-            mdi:keyboard-return
-          {% elif val == 'Idle' %}
-            mdi:dots-horizontal
-          {% elif val == 'Paused' %}
-            mdi:pause-circle
-          {% else %}
-            mdi:help-circle
-          {% endif %}
-      vacuum_fan_speed:
-        friendly_name: Velocidad ventilador
-        entity_id:
-          - vacuum.xiaomi_vacuum_cleaner
-        value_template: "Modo: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.fan_speed }}"
-        icon_template: "mdi:speedometer"
-      vacuum_battery:
-        friendly_name: Bateria
-        entity_id:
-          - vacuum.xiaomi_vacuum_cleaner
-        value_template: "Bateria: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_level }}"
-        unit_of_measurement: "%"
-        icon_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_icon }}"
-      vacuum_cleaning_time:
-        friendly_name: Ultimo ciclo
-        entity_id:
-          - vacuum.xiaomi_vacuum_cleaner
-        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaning_time }}"
-        icon_template: "mdi:timer"
-      vacuum_cleaned_area:
-        friendly_name: Area ultimo ciclo
-        unit_of_measurement: "m ²"
-        entity_id:
-          - vacuum.xiaomi_vacuum_cleaner
-        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaned_area }}"
-        icon_template: "mdi:ruler"
-      vacuum_cleanmainbrush:
-        friendly_name: Reemplazo cepillo principal
-        unit_of_measurement: "h"
-        entity_id:
-          - vacuum.xiaomi_vacuum_cleaner
-        value_template: "Cepillo principal: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.main_brush_left }}"
-        icon_template: "mdi:screwdriver"
-      vacuum_cleansidebrush:
-        friendly_name: Reemplazo cepillo lateral
-        unit_of_measurement: "h"
-        entity_id:
-          - vacuum.xiaomi_vacuum_cleaner
-        value_template: "Cepillo lateral: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.side_brush_left }}"
-        icon_template: "mdi:screwdriver"
-      vacuum_cleanfilter:
-        friendly_name: Reemplazo filtro
-        unit_of_measurement: "h"
-        entity_id:
-          - vacuum.xiaomi_vacuum_cleaner
-        value_template: "Filtro: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.filter_left }}"
-        icon_template: "mdi:screwdriver"
-      vacuum_sensordirtyleft:
-        friendly_name: Limpieza sensores
-        unit_of_measurement: "h"
-        entity_id:
-          - vacuum.xiaomi_vacuum_cleaner
-        value_template: "Sensores: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.sensor_dirty_left }}"
-        icon_template: "mdi:screwdriver"
-      vacuum_do_not_disturb:
-        friendly_name: No molestar
-        entity_id:
-          - vacuum.xiaomi_vacuum_cleaner
-        value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.do_not_disturb }}"
-        icon_template: >
-          {% set val =  states.vacuum.xiaomi_vacuum_cleaner.attributes.do_not_disturb  %}
-          {% if val == 'on' %}
-            mdi:do-not-disturb
-          {% else %}
-            mdi:do-not-disturb-off
-          {% endif %}
-      vacuum_operation:
-        friendly_name: Estado
-        value_template: "Estado"
-      vacuum_accessories:
-        friendly_name: Mantenimiento
-        value_template: "Mantenimiento"
-      vacuum_cleaner_error_sensor:
-        friendly_name: Error
-        value_template: >-
-          {% if states.vacuum.xiaomi_vacuum_cleaner.attributes.error is defined %}
-            {{states.vacuum.xiaomi_vacuum_cleaner.attributes.error}}
-          {% else %}
-            No Error
-          {% endif %}
-
-telegram_bot:
-  - platform: polling
-    api_key: !secret telegram_api_key
-    allowed_chat_ids:
-      - !secret telegram_chat_id
-
-notify:
-  - name: telegram
-    platform: telegram
-    chat_id: !secret telegram_chat_id
-
+zone:
 wake_on_lan:
-
-samsungtv:
-  - host: !secret tv_salon_ip
-    turn_on_action:
-      - service: wake_on_lan.send_magic_packet
-        data:
-          mac: !secret tv_salon_mac
-  - host: !secret tv_cocina_ip
-    turn_on_action:
-      - service: wake_on_lan.send_magic_packet
-        data:
-          mac: !secret tv_cocina_mac
 
 api:
 alexa:
   smart_home:
 
-xiaomi_aqara:
-  discovery_retry: 5
-  gateways:
-    - key: !secret aqara_gateway_key
-
-alarm_control_panel: !include resources/bwalarm/bwalarm.yaml
-
-light:
-  - platform: xiaomi_miio
-    name: Luz espejo Baño 1
-    host: !secret luz_espejo_bano_1_ip
-    token: !secret luz_espejo_bano_1_token
-    model: philips.light.bulb
-  - platform: xiaomi_miio
-    name: Luz espejo Baño 2
-    host: !secret luz_espejo_bano_2_ip
-    token: !secret luz_espejo_bano_2_token
-    model: philips.light.bulb
-
-discovery:
-  ignore:
-    - yeelight
-
-yeelight:
-  devices:
-    !secret luz_dormitorio_ip:
-      name: Luz Dormitorio
+tts:
+  - platform: google_translate

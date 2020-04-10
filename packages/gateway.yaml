@@ -1,0 +1,27 @@
+xiaomi_aqara:
+  discovery_retry: 5
+  gateways:
+    - key: !secret aqara_gateway_key
+
+customize:
+light.gateway_light_04cf8cf312cd:
+  friendly_name: Gateway entrada
+
+alarm_control_panel: !include resources/bwalarm/bwalarm.yaml
+
+automation:
+  - id: "1578413858931"
+    alias: Reproducir sonido al abrir puerta entrada
+    description: ""
+    trigger:
+      - entity_id: binary_sensor.door_window_sensor_158d0003ce68d2
+        from: "off"
+        platform: state
+        to: "on"
+    condition: []
+    action:
+      - data:
+          gw_mac: !secret aqara_gateway_mac
+          ringtone_id: 10
+          ringtone_vol: 5
+        service: xiaomi_aqara.play_ringtone

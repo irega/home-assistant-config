@@ -1,0 +1,62 @@
+light:
+  - platform: xiaomi_miio
+    name: Luz espejo Baño 1
+    host: !secret luz_espejo_bano_1_ip
+    token: !secret luz_espejo_bano_1_token
+    model: philips.light.bulb
+  - platform: xiaomi_miio
+    name: Luz espejo Baño 2
+    host: !secret luz_espejo_bano_2_ip
+    token: !secret luz_espejo_bano_2_token
+    model: philips.light.bulb
+
+discovery:
+  ignore:
+    - yeelight
+
+yeelight:
+  devices:
+    !secret luz_dormitorio_ip:
+      name: Luz Dormitorio
+
+customize:
+switch.plug_158d000310c4a0:
+  friendly_name: Luz cómoda
+
+group:
+luz_espejo_bano:
+  name: Luz espejo Baño
+  entities:
+    - light.luz_bano_1
+    - light.luz_bano_2
+
+automation:
+  - id: "1578412911487"
+    alias: Encender luz entrada cuando hay movimiento
+    description: ""
+    trigger:
+      - entity_id: binary_sensor.motion_sensor_158d00044cce1a
+        from: "off"
+        platform: state
+        to: "on"
+    condition:
+      - condition: state
+        entity_id: sun.sun
+        state: below_horizon
+    action:
+      - data:
+          entity_id: light.gateway_light_04cf8cf312cd
+        service: light.turn_on
+  - id: "1578413039150"
+    alias: Apagar luz entrada cuando no hay movimiento
+    description: ""
+    trigger:
+      - entity_id: binary_sensor.motion_sensor_158d00044cce1a
+        from: "on"
+        platform: state
+        to: "off"
+    condition: []
+    action:
+      - data:
+          entity_id: light.gateway_light_04cf8cf312cd
+        service: light.turn_off
