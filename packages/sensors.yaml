@@ -14,16 +14,16 @@ homeassistant:
       friendly_name: Cubo salón
 
 automation:
-  - id: 'snapshots_went_stale'
+  - id: "snapshots_went_stale"
     alias: Snapshots went stale
     trigger:
       - platform: state
         entity_id: binary_sensor.snapshots_stale
-        from: 'False'
-        to: 'True'
+        from: "False"
+        to: "True"
     condition: []
     action:
       - data:
+          title: "Snapshots are Stale"
+          message: "Please visit the 'Hass.io Google Drive Backup' add-on status page for details."
         service: notify.telegram
-          title: Snapshots are Stale
-          message: Please visit the 'Hass.io Google Drive Backup' add-on status page for details.
