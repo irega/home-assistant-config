@@ -12,3 +12,18 @@ homeassistant:
       friendly_name: Interruptor mesilla
     binary_sensor.cube_158d0002a6f5e7:
       friendly_name: Cubo salón
+
+automation:
+  - id: 'snapshots_went_stale'
+    alias: Snapshots went stale
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.snapshots_stale
+        from: 'False'
+        to: 'True'
+    condition: []
+    action:
+      - data:
+        service: notify.telegram
+          title: Snapshots are Stale
+          message: Please visit the 'Hass.io Google Drive Backup ' add-on status page for details.
