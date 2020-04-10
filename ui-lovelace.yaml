@@ -334,8 +334,8 @@ views:
         title: Automatizaciones
         type: entities
       - entities:
-          - entity: script.1578480478781
-          - entity: script.1580928997498
+          - entity: script.vacuum_limpiar_casa
+          - entity: script.vacuum_parar_limpieza
           - entity: script.vacuum_banio
           - entity: script.vacuum_cocina
           - entity: script.vacuum_despacho
