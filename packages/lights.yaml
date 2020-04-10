@@ -25,11 +25,11 @@ homeassistant:
       friendly_name: Luz cómoda
 
 group:
-luz_espejo_bano:
-  name: Luz espejo Baño
-  entities:
-    - light.luz_bano_1
-    - light.luz_bano_2
+  luz_espejo_bano:
+    name: Luz espejo Baño
+    entities:
+      - light.luz_bano_1
+      - light.luz_bano_2
 
 automation:
   - id: "1578412911487"
