@@ -356,6 +356,6 @@ views:
           content: >-
             Snapshots are stale! Please visit the "Hass.io Google Drive Backup" add-on
             status page for details.
-          title: Stale Snapshots!`
+          title: Stale Snapshots!
     path: general
     title: General
