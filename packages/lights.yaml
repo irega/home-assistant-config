@@ -9,6 +9,11 @@ light:
     host: !secret luz_espejo_bano_2_ip
     token: !secret luz_espejo_bano_2_token
     model: philips.light.bulb
+  - platform: group
+    name: Luz espejo Baño
+    entities:
+      - light.luz_espejo_bano_1
+      - light.luz_espejo_bano_2
 
 discovery:
   ignore:
@@ -23,13 +28,6 @@ homeassistant:
   customize:
     switch.plug_158d000310c4a0:
       friendly_name: Luz cómoda
-
-group:
-  luz_espejo_bano:
-    name: Luz espejo Baño
-    entities:
-      - light.luz_bano_1
-      - light.luz_bano_2
 
 automation:
   - id: "1578412911487"

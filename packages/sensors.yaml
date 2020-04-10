@@ -36,4 +36,4 @@ automation:
           click_type: single
     action:
       service: light.toggle
-      entity_id: light.luz_espejo_bano_1
+      entity_id: light.luz_espejo_bano
