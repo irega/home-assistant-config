@@ -27,3 +27,13 @@ automation:
           title: "Snapshots are Stale"
           message: "Please visit the 'Hass.io Google Drive Backup' add-on status page for details."
         service: notify.telegram
+  - alias: Toggle luz Baño
+    trigger:
+      - platform: event
+        event_type: xiaomi_aqara.click
+        event_data:
+          entity_id: binary_sensor.switch_158d000373c0dc
+          click_type: single
+    action:
+      service: light.toggle
+      entity_id: light.luz_espejo_bano_1
