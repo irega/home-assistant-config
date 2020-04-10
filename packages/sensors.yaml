@@ -26,4 +26,4 @@ automation:
       - data:
         service: notify.telegram
           title: Snapshots are Stale
-          message: Please visit the 'Hass.io Google Drive Backup ' add-on status page for details.
+          message: Please visit the 'Hass.io Google Drive Backup' add-on status page for details.
