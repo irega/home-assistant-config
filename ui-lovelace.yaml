@@ -298,10 +298,6 @@ views:
         type: light
       - entity: light.luz_espejo_bano_2
         type: light
-    path: bano
-    title: Baño
-  - badges: []
-    cards:
       - entity: binary_sensor.switch_158d000373c0dc
         hold_action:
           action: more-info
@@ -310,6 +306,10 @@ views:
         tap_action:
           action: toggle
         type: entity-button
+    path: bano
+    title: Baño
+  - badges: []
+    cards:
       - entity: light.luz_dormitorio
         type: light
     path: dormitorio
@@ -330,6 +330,8 @@ views:
           - entity: automation.notificar_limpieza_finalizada_aspirador
           - entity: automation.notificar_problema_resuelto_aspirador
           - entity: automation.reproducir_sonido_al_abrir_puerta_entrada
+          - entity: automation.toggle_luz_bano
+          - entity: automation.notificar_error_backup
         show_header_toggle: true
         title: Automatizaciones
         type: entities
