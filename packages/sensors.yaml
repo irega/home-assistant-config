@@ -37,3 +37,35 @@ automation:
     action:
       service: light.toggle
       entity_id: light.luz_espejo_bano
+  - alias: Activar modo cama cuando se agita cubo
+    trigger:
+      platform: event
+      event_type: xiaomi_aqara.cube_action
+      event_data:
+        entity_id: binary_sensor.cube_158d0002a6f5e7
+        action_type: tap_twice
+    action:
+      - service: script.activar_modo_cama
+  - alias: Activar modo noche cuando se golpea cubo
+    trigger:
+      platform: event
+      event_type: xiaomi_aqara.cube_action
+      event_data:
+        entity_id: binary_sensor.cube_158d0002a6f5e7
+        action_type: shake_air
+    action:
+      - service: script.activar_modo_noche
+
+script:
+  activar_modo_cama:
+    alias: Activar modo cama
+    sequence:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.plug_158d000310c4a0
+  activar_modo_noche:
+    alias: Activar modo noche
+    sequence:
+      - service: switch.turn_off
+        data:
+          entity_id: switch.plug_158d000310c4a0
