@@ -62,10 +62,10 @@ script:
     sequence:
       - service: switch.turn_on
         data:
-          entity_id: switch.plug_158d000310c4a0
+          entity_id: switch.shelly_shplg_s_26722d
   activar_modo_noche:
     alias: Activar modo noche
     sequence:
       - service: switch.turn_off
         data:
-          entity_id: switch.plug_158d000310c4a0
+          entity_id: switch.shelly_shplg_s_26722d
