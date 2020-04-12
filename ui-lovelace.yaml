@@ -28,7 +28,7 @@ views:
     cards:
       - entity: climate.netatmo_smart_thermostat
         type: thermostat
-      - entity: switch.plug_158d000310c4a0
+      - entity: switch.shelly_shplg_s_26722d
         hold_action:
           action: more-info
         name: Luz cómoda
@@ -312,6 +312,15 @@ views:
     cards:
       - entity: light.luz_dormitorio
         type: light
+      - entity: switch.plug_158d000310c4a0
+        hold_action:
+          action: more-info
+        name: Luz cómoda
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
     path: dormitorio
     title: Dormitorio
   - badges:
