@@ -69,6 +69,12 @@ script:
       - service: light.turn_off
         data:
           entity_id: light.luz_dormitorio
+      - service: media_player.turn_off
+        data:
+          entity_id: media_player.tv_cocina
+      - service: media_player.turn_off
+        data:
+          entity_id: media_player.tv_salon
       - service: switch.turn_on
         data:
           entity_id: switch.plug_158d000310c4a0
@@ -84,6 +90,12 @@ script:
       - service: light.turn_off
         data:
           entity_id: light.luz_dormitorio
+      - service: media_player.turn_off
+        data:
+          entity_id: media_player.tv_cocina
+      - service: media_player.turn_off
+        data:
+          entity_id: media_player.tv_salon
       - service: switch.turn_off
         data:
           entity_id: switch.plug_158d000310c4a0
