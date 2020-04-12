@@ -29,3 +29,5 @@ alexa:
 
 tts:
   - platform: google_translate
+
+shelly:
