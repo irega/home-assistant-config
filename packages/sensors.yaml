@@ -14,7 +14,8 @@ homeassistant:
       friendly_name: Cubo salón
 
 automation:
-  - alias: Notificar error backup
+  - id: BACKUP Notificar ERROR
+    alias: Notificar error backup
     trigger:
       - platform: state
         entity_id: binary_sensor.snapshots_stale
