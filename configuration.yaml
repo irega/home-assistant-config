@@ -29,3 +29,6 @@ alexa:
 
 tts:
   - platform: google_translate
+
+hacs:
+  token: !secret hacs_token
