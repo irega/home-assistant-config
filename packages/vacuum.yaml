@@ -233,7 +233,7 @@ script:
             - 28042
             - 18516
             - 33192
-        service: vacuum.xiaomi_clean_zone
+        service: xiaomi_miio.vacuum_clean_zone
   vacuum_dormitorio:
     alias: Limpiar dormitorio
     sequence:
@@ -245,7 +245,7 @@ script:
               - 28691
               - 27204
               - 32191
-        service: vacuum.xiaomi_clean_zone
+        service: xiaomi_miio.vacuum_clean_zone
   vacuum_despacho:
     alias: Limpiar despacho
     sequence:
@@ -257,7 +257,7 @@ script:
               - 29744
               - 23770
               - 33344
-        service: vacuum.xiaomi_clean_zone
+        service: xiaomi_miio.vacuum_clean_zone
   vacuum_vestidor:
     alias: Limpiar vestidor
     sequence:
@@ -269,7 +269,7 @@ script:
               - 29676
               - 20708
               - 33276
-        service: vacuum.xiaomi_clean_zone
+        service: xiaomi_miio.vacuum_clean_zone
   vacuum_entrada:
     alias: Limpiar entrada
     sequence:
@@ -281,7 +281,7 @@ script:
               - 26334
               - 21365
               - 28734
-        service: vacuum.xiaomi_clean_zone
+        service: xiaomi_miio.vacuum_clean_zone
   vacuum_pasillo:
     alias: Limpiar pasillo
     sequence:
@@ -293,7 +293,7 @@ script:
               - 28678
               - 24380
               - 29728
-        service: vacuum.xiaomi_clean_zone
+        service: xiaomi_miio.vacuum_clean_zone
   vacuum_salon:
     alias: Limpiar salón
     sequence:
@@ -305,7 +305,7 @@ script:
               - 25057
               - 26878
               - 28657
-        service: vacuum.xiaomi_clean_zone
+        service: xiaomi_miio.vacuum_clean_zone
   vacuum_banio:
     alias: Limpiar banio
     sequence:
@@ -317,7 +317,7 @@ script:
               - 26264
               - 19774
               - 28064
-        service: vacuum.xiaomi_clean_zone
+        service: xiaomi_miio.vacuum_clean_zone
   vacuum_limpiar_casa:
     alias: Limpiar casa
     sequence:
