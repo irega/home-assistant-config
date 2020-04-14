@@ -228,11 +228,7 @@ script:
       - data:
           entity_id: vacuum.xiaomi_vacuum_cleaner
           repeats: "1"
-          zone:
-            - - 16166
-            - 28042
-            - 18516
-            - 33192
+          zone: [[16166, 28042, 18516, 33192]]
         service: xiaomi_miio.vacuum_clean_zone
   vacuum_dormitorio:
     alias: Limpiar dormitorio
@@ -240,11 +236,7 @@ script:
       - data:
           entity_id: vacuum.xiaomi_vacuum_cleaner
           repeats: "1"
-          zone:
-            - - 23704
-              - 28691
-              - 27204
-              - 32191
+          zone: [[23704, 28691, 27204, 32191]]
         service: xiaomi_miio.vacuum_clean_zone
   vacuum_despacho:
     alias: Limpiar despacho
@@ -252,11 +244,7 @@ script:
       - data:
           entity_id: vacuum.xiaomi_vacuum_cleaner
           repeats: "1"
-          zone:
-            - - 21620
-              - 29744
-              - 23770
-              - 33344
+          zone: [[21620, 29744, 23770, 33344]]
         service: xiaomi_miio.vacuum_clean_zone
   vacuum_vestidor:
     alias: Limpiar vestidor
@@ -264,11 +252,7 @@ script:
       - data:
           entity_id: vacuum.xiaomi_vacuum_cleaner
           repeats: "1"
-          zone:
-            - - 18558
-              - 29676
-              - 20708
-              - 33276
+          zone: [[18558, 29676, 20708, 33276]]
         service: xiaomi_miio.vacuum_clean_zone
   vacuum_entrada:
     alias: Limpiar entrada
@@ -276,11 +260,7 @@ script:
       - data:
           entity_id: vacuum.xiaomi_vacuum_cleaner
           repeats: "1"
-          zone:
-            - - 19765
-              - 26334
-              - 21365
-              - 28734
+          zone: [[19765, 26334, 21365, 28734]]
         service: xiaomi_miio.vacuum_clean_zone
   vacuum_pasillo:
     alias: Limpiar pasillo
@@ -288,11 +268,7 @@ script:
       - data:
           entity_id: vacuum.xiaomi_vacuum_cleaner
           repeats: "1"
-          zone:
-            - - 18630
-              - 28678
-              - 24380
-              - 29728
+          zone: [[18630, 28678, 24380, 29728]]
         service: xiaomi_miio.vacuum_clean_zone
   vacuum_salon:
     alias: Limpiar salón
@@ -300,11 +276,7 @@ script:
       - data:
           entity_id: vacuum.xiaomi_vacuum_cleaner
           repeats: "1"
-          zone:
-            - - 21328
-              - 25057
-              - 26878
-              - 28657
+          zone: [[21328, 25057, 26878, 28657]]
         service: xiaomi_miio.vacuum_clean_zone
   vacuum_banio:
     alias: Limpiar banio
@@ -312,11 +284,7 @@ script:
       - data:
           entity_id: vacuum.xiaomi_vacuum_cleaner
           repeats: "1"
-          zone:
-            - - 17174
-              - 26264
-              - 19774
-              - 28064
+          zone: [[17174, 26264, 19774, 28064]]
         service: xiaomi_miio.vacuum_clean_zone
   vacuum_limpiar_casa:
     alias: Limpiar casa
