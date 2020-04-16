@@ -187,11 +187,11 @@ automation:
           message: En la base de carga y cargando.
           title: "*Aspiradora*"
         service: notify.telegram
-  - id: ASPIRADORA Limpiar entre semana
-    alias: Limpiar entre semana
+  - id: ASPIRADORA Limpiar casa
+    alias: Limpiar casa
     description: ""
     trigger:
-      - at: "18:00"
+      - at: "13:00"
         platform: time
     condition:
       - condition: time
@@ -200,19 +200,6 @@ automation:
           - tue
           - wed
           - thu
-    action:
-      - data:
-          entity_id: vacuum.xiaomi_vacuum_cleaner
-        service: vacuum.start
-  - id: ASPIRADORA Limpiar fin de semana
-    alias: Limpiar fin de semana
-    description: ""
-    trigger:
-      - at: "20:00"
-        platform: time
-    condition:
-      - condition: time
-        weekday:
           - fri
           - sat
           - sun
