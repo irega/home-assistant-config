@@ -44,12 +44,12 @@ alarm_control_panel:
 # perimeter:
 #   - binary_sensor.garage_door_sensor
 
-panel_custom:
-  - name: alarm
-    sidebar_title: Alarm
-    sidebar_icon: mdi:security-home
-    config:
-      alarmid: alarm_control_panel.house ## USE THE SAME ID AS USED IN YOUR ALARM.YAML
+# panel_custom:
+#   - name: alarm
+#     sidebar_title: Alarm
+#     sidebar_icon: mdi:security-home
+#     config:
+#       alarmid: alarm_control_panel.house ## USE THE SAME ID AS USED IN YOUR ALARM.YAML
 
 automation:
   - id: alarm_armed_away
