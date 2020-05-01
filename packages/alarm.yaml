@@ -68,7 +68,7 @@ automation:
       data:
         gw_mac: !secret aqara_gateway_mac
         ringtone_id: 10010 # Alarma Activada.
-        ringtone_vol: 100
+        ringtone_vol: 20
     - service: notify.telegram
       data:
         message: "* Alarma Activada*. Adios :)"
@@ -113,7 +113,7 @@ automation:
       data:
         gw_mac: !secret aqara_gateway_mac
         ringtone_id: 10017 # Contador 22 Segundos
-        ringtone_vol: 100
+        ringtone_vol: 20
 
 - id: alarm_disarmed
   alias: '[Alarm] Disarmed'
@@ -126,7 +126,7 @@ automation:
       data:
         gw_mac: !secret aqara_gateway_mac
         ringtone_id: 10014 # Alarma desactivada
-        ringtone_vol: 100
+        ringtone_vol: 20
     - service: input_boolean.turn_off
       data:
         entity_id: input_boolean.alarma_casa
@@ -169,7 +169,7 @@ automation:
       data:
         gw_mac: !secret aqara_gateway_mac
         ringtone_id: 10013 # Se ha disparado la alarma, por favor desactivar.
-        ringtone_vol: 100
+        ringtone_vol: 20
 
 
 ####################################################
@@ -221,7 +221,7 @@ automation:
       data:
         gw_mac: !secret aqara_gateway_mac
         ringtone_id: 2
-        ringtone_vol: 100
+        ringtone_vol: 20
     - delay:
         seconds: 4
     - service: automation.turn_on
@@ -246,7 +246,7 @@ automation:
       data:
         gw_mac: !secret aqara_gateway_mac
         ringtone_id: 2
-        ringtone_vol: 100
+        ringtone_vol: 20
     - delay:
         seconds: 4
     - service: automation.turn_on
@@ -271,7 +271,7 @@ automation:
       data:
         gw_mac: !secret aqara_gateway_mac
         ringtone_id: 2
-        ringtone_vol: 100
+        ringtone_vol: 20
     - delay:
         seconds: 4
     - service: automation.turn_on
