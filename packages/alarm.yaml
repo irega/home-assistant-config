@@ -1,0 +1,278 @@
+platform: bwalarm
+name: House
+
+code: !secret alarm_code #Code, should consist of one or more digits ie 6482
+panic_code: !secret panic_code #[OPTIONAL] Panic Code should consist of one or more digits ie 9876, it needs to be different to your standard alarm code. This enables a special panic mode. This can be used under duress to deactivate the alarm which would appear to the unseeing eye as deactivated however a special attribute [panic_mode] listed under the alarm_control_panel.[identifier] will change to ACTIVE. This status could be used in your automations to send a notification to someone else police/spouse/sibling/neighbour that you are under duress. To deactive this mode arm then disarm your alarm in the usual manner. 
+
+pending_time: 25 #Grace time in seconds to allow for exit and entry using Away mode
+trigger_time: 600
+
+alarm: automation.alarm_triggered
+warning: automation.alarm_warning
+
+clock: True  #Optional - True enables a clock in the center of the status bar
+perimeter_mode: False #Optional - True enables perimeter mode, this could be known as 'Day Mode' i.e. only arm the doors whilst there is someone using all floors
+weather: True #Optional - Allows a weather summary to be displayed on the status bar. Dark Sky weather component must be enabled with the name sensor.dark_sky_summary
+
+#### COLOURS ###########  Use any HTML format
+warning_colour: 'orange'
+pending_colour: 'orange'
+disarmed_colour: '#03A9F4'
+armed_home_colour: 'black'
+armed_away_colour: 'black'
+triggered_colour: 'red'
+
+############# SENSOR GROUPS ########################
+# Sensors in this group tigger the alarm immediately
+immediate:
+#  - binary_sensor.door_window_sensor_158d0001a5e1a3
+#  - binary_sensor.door_window_sensor_158d0001a99eb0
+  - binary_sensor.door_window_sensor_xxxxxxxxxxxx
+
+# Sensors in this group start the clock (pending_time) when tripped before the alarm is activated in 'Away' mode
+delayed:
+  - binary_sensor.door_window_sensor_xxxxxxxx
+  - binary_sensor.door_window_sensor_158d0001a5e1a3
+  - binary_sensor.door_window_sensor_158d0001a99eb0
+
+
+# Same as notathome but hopefully the title is more self explanatory. Can still use notathome for backwards compatibility
+# Note sensors can exist in more than one group notice top_floor appears in two groups
+homemodeignore:
+  - binary_sensor.door_window_sensor_xxxxxxxxx
+
+# Use this group to automatically override the warning message on open sensors when setting 'away' mode. (I use this as I have a motion sensor at the front door)
+override:
+  - binary_sensor.door_window_sensor_xxxxxxxxxxxxxxxxxxx
+
+# This group is special and only effects 'perimeter mode'. If perimeter_mode is enabled then any sensor in this group will trigger the alarm immediately if arm perimeter is set. There is no delayed group for this mode (unless requested as a feature of course!)
+perimeter:
+  - binary_sensor.garage_door_sensor
+
+panel_custom:
+  - name: alarm
+    sidebar_title: Alarm
+    sidebar_icon: mdi:security-home
+    config:
+      alarmid: alarm_control_panel.house ## USE THE SAME ID AS USED IN YOUR ALARM.YAML
+
+automation:
+- id: alarm_armed_away
+  alias: '[Alarm] Away Mode Armed'
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.house
+      to: 'armed_away'
+  action:
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 10010 # Alarma Activada.
+        ringtone_vol: 100
+    - service: notify.telegram
+      data:
+        message: "* Alarma Activada*. Adios :)"
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.alarma_casa
+
+- id: alarm_armed_home
+  alias: '[Alarm] Home Mode Armed'
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.house
+      to: 'armed_home'
+  action:
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 10011 # Modo casa activado. Buenas noches
+        ringtone_vol: 50
+    - service: notify.telegram
+      data:
+        message: "*Modo noche activado*. Buenas noches."
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.alarma_casa
+
+- id: alarm_arming_away
+  alias: '[Alarm] Away Mode Arming'
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.house
+      to: 'pending'
+  action:
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 10012 # Activando alarma, revisa que puertas y ventanas esten cerradas
+        ringtone_vol: 100
+    - delay:
+        seconds: 8
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 10017 # Contador 22 Segundos
+        ringtone_vol: 100
+
+- id: alarm_disarmed
+  alias: '[Alarm] Disarmed'
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.house
+    to: 'disarmed'
+  action:
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 10014 # Alarma desactivada
+        ringtone_vol: 100
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.alarma_casa
+    - service: notify.telegram
+      data:
+        message: "Alarma *desactivada*"
+    - service: automation.turn_off
+      entity_id: automation.sirena1
+    - service: automation.turn_off
+      entity_id: automation.sirena2
+    - service: automation.turn_off
+      entity_id: automation.sirena3
+
+- id: alarm_triggered
+  alias: '[Alarm] Triggered'
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.house
+    to: 'triggered'
+  action:
+    - service: automation.turn_on
+      entity_id: automation.sirena1
+#    - service: switch.turn_on
+#      entity_id: switch.siren_switch
+    - service: notify.telegram
+      data:
+        message: 'HA SALTADO LA ALARMA!!! {{ states[states.alarm_control_panel.house.attributes.changed_by.split(".")[0]][ states.alarm_control_panel.house.attributes.changed_by.split(".")[1]].name }}'
+
+- id: alarm_warning
+  alias: '[Alarm] Warning'
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.house
+    to: 'warning'
+  action:
+    - service: notify.telegram
+      data:
+        message: 'ALARM Warning {{ states[states.alarm_control_panel.house.attributes.changed_by.split(".")[0]][ states.alarm_control_panel.house.attributes.changed_by.split(".")[1]].name }}'
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 10013 # Se ha disparado la alarma, por favor desactivar.
+        ringtone_vol: 100
+
+
+####################################################
+################# P U L S A D O R  #################
+####################################################
+- alias: "Alarma Casa on"
+  trigger:
+    - platform: state
+      entity_id: input_boolean.alarma_casa
+      to: 'on'
+  action:
+    - service: alarm_control_panel.alarm_arm_away
+      data:
+        entity_id: alarm_control_panel.house
+#        code: !secret alarm_code
+
+- alias: "Alarma Casa off"
+  trigger:
+    - platform: state
+      entity_id: input_boolean.alarma_casa
+      to: 'off'
+  action:
+    - service: alarm_control_panel.alarm_disarm
+      data:
+        entity_id: alarm_control_panel.house
+        code: !secret alarm_code
+
+  
+
+####################################################
+################# S I R E N A ######################
+####################################################
+- alias: "Sirena1"
+  initial_state: False
+  hide_entity: False
+  trigger:
+    - platform: state
+      entity_id: automation.sirena1
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: alarm_control_panel.house
+      state: 'triggered'
+  action:
+    - service: automation.turn_off
+      entity_id: automation.sirena3
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 2
+        ringtone_vol: 100
+    - delay:
+        seconds: 4
+    - service: automation.turn_on
+      entity_id: automation.sirena2
+
+- alias: "Sirena2"
+  initial_state: False
+  hide_entity: False
+  trigger:
+    - platform: state
+      entity_id: automation.sirena2
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: alarm_control_panel.house
+      state: 'triggered'
+  action:
+    - service: automation.turn_off
+      entity_id: automation.sirena1
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 2
+        ringtone_vol: 100
+    - delay:
+        seconds: 4
+    - service: automation.turn_on
+      entity_id: automation.sirena3
+
+- alias: "Sirena3"
+  initial_state: False
+  hide_entity: False
+  trigger:
+    - platform: state
+      entity_id: automation.sirena3
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: alarm_control_panel.house
+      state: 'triggered'
+  action:
+    - service: automation.turn_off
+      entity_id: automation.sirena2
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 2
+        ringtone_vol: 100
+    - delay:
+        seconds: 4
+    - service: automation.turn_on
+      entity_id: automation.sirena1
