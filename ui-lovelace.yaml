@@ -331,8 +331,7 @@ views:
       - entities:
           - entity: automation.apagar_luz_entrada_cuando_no_hay_movimiento
           - entity: automation.encender_luz_entrada_cuando_hay_movimiento
-          - entity: automation.limpiar_entre_semana
-          - entity: automation.limpiar_fin_de_semana
+          - entity: automation.limpiar_casa
           - entity: automation.notificar_comienzo_limpieza_aspirador
           - entity: automation.notificar_error_aspirador
           - entity: automation.notificar_estado_cargando_aspirador
