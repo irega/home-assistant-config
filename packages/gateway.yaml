@@ -8,8 +8,6 @@ homeassistant:
     light.gateway_light_04cf8cf312cd:
       friendly_name: Gateway entrada
 
-# alarm_control_panel: !include /config/resources/bwalarm/bwalarm.yaml
-
 automation:
   - id: "1578413858931"
     alias: Reproducir sonido al abrir puerta entrada
