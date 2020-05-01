@@ -14,9 +14,6 @@ automation:
       - service: notify.telegram
         data:
           message: "* Alarma Activada*. Adios :)"
-      - service: input_boolean.turn_on
-        data:
-          entity_id: input_boolean.alarma_casa
 
   - id: alarm_armed_home
     alias: "[Alarm] Home Mode Armed"
@@ -33,9 +30,6 @@ automation:
       - service: notify.telegram
         data:
           message: "*Modo noche activado*. Buenas noches."
-      - service: input_boolean.turn_on
-        data:
-          entity_id: input_boolean.alarma_casa
 
   - id: alarm_arming_away
     alias: "[Alarm] Away Mode Arming"
@@ -69,9 +63,6 @@ automation:
           gw_mac: !secret aqara_gateway_mac
           ringtone_id: 10014 # Alarma desactivada
           ringtone_vol: 20
-      - service: input_boolean.turn_off
-        data:
-          entity_id: input_boolean.alarma_casa
       - service: notify.telegram
         data:
           message: "Alarma *desactivada*"
@@ -112,31 +103,6 @@ automation:
           gw_mac: !secret aqara_gateway_mac
           ringtone_id: 10013 # Se ha disparado la alarma, por favor desactivar.
           ringtone_vol: 20
-
-  ####################################################
-  ################# P U L S A D O R  #################
-  ####################################################
-  - alias: "Alarma Casa on"
-    trigger:
-      - platform: state
-        entity_id: input_boolean.alarma_casa
-        to: "on"
-    action:
-      - service: alarm_control_panel.alarm_arm_away
-        data:
-          entity_id: alarm_control_panel.house
-  #        code: !secret alarm_code
-
-  - alias: "Alarma Casa off"
-    trigger:
-      - platform: state
-        entity_id: input_boolean.alarma_casa
-        to: "off"
-    action:
-      - service: alarm_control_panel.alarm_disarm
-        data:
-          entity_id: alarm_control_panel.house
-          code: !secret alarm_code
 
   ####################################################
   ################# S I R E N A ######################
