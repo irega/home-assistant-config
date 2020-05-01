@@ -4,3 +4,4 @@ home-assistant_v2.db*
 .storage/
 tts/
 **/__pycache__/**
+resources/bwalarm/bwalarm_log.json
