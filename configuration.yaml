@@ -31,3 +31,5 @@ tts:
   - platform: google_translate
 
 shelly:
+
+alarm_control_panel: !include resources/bwalarm/bwalarm.yaml
