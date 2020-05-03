@@ -10,11 +10,11 @@ enable_night_mode: false
 states:
   armed_away:
     immediate:
-    - binary_sensor.motion_sensor_158d00044cce1a
+    - binary_sensor.door_window_sensor_158d0003ce68d2
     pending_time: 25
   armed_home:
     immediate:
-    - binary_sensor.motion_sensor_158d00044cce1a
+    - binary_sensor.door_window_sensor_158d0003ce68d2
 panel:
   cameras: []
 users:
