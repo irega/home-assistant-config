@@ -28,8 +28,13 @@ users:
   enabled: false
   code: !secret hassio_user_id
   picture: ha.png
-- id: !secret personal_user_id
-  name: !secret personal_user_name
+- id: !secret main_user_id
+  name: !secret main_user_name
   enabled: false
-  code: !secret personal_user_id
+  code: !secret main_user_id
+  picture: ha.png
+- id: !secret second_user_id
+  name: !secret second_user_name
+  enabled: false
+  code: !secret second_user_id
   picture: ha.png
