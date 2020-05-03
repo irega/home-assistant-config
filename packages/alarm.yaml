@@ -9,8 +9,8 @@ automation:
       - service: xiaomi_aqara.play_ringtone
         data:
           gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 10001 # Alarma Activada.
-          ringtone_vol: 1
+          ringtone_id: 10001
+          ringtone_vol: 5
       - service: notify.telegram
         data:
           message: "* Alarma Activada*. Adios :)"
@@ -25,8 +25,8 @@ automation:
       - service: xiaomi_aqara.play_ringtone
         data:
           gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 10002 # Modo casa activado. Buenas noches
-          ringtone_vol: 1
+          ringtone_id: 10002
+          ringtone_vol: 5
       - service: notify.telegram
         data:
           message: "*Modo noche activado*. Buenas noches."
@@ -41,15 +41,8 @@ automation:
       - service: xiaomi_aqara.play_ringtone
         data:
           gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 10003 # Activando alarma, revisa que puertas y ventanas esten cerradas
-          ringtone_vol: 1
-      - delay:
-          seconds: 8
-      - service: xiaomi_aqara.play_ringtone
-        data:
-          gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 10004 # Contador 22 Segundos
-          ringtone_vol: 1
+          ringtone_id: 10004
+          ringtone_vol: 5
 
   - id: alarm_disarmed
     alias: "[Alarm] Disarmed"
@@ -61,8 +54,8 @@ automation:
       - service: xiaomi_aqara.play_ringtone
         data:
           gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 10005 # Alarma desactivada
-          ringtone_vol: 1
+          ringtone_id: 10005
+          ringtone_vol: 5
       - service: notify.telegram
         data:
           message: "Alarma *desactivada*"
@@ -106,8 +99,8 @@ automation:
       - service: xiaomi_aqara.play_ringtone
         data:
           gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 1
-          ringtone_vol: 1
+          ringtone_id: 2
+          ringtone_vol: 6
       - delay:
           seconds: 4
       - service: automation.turn_on
@@ -130,8 +123,8 @@ automation:
       - service: xiaomi_aqara.play_ringtone
         data:
           gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 1
-          ringtone_vol: 1
+          ringtone_id: 2
+          ringtone_vol: 6
       - delay:
           seconds: 4
       - service: automation.turn_on
@@ -154,8 +147,8 @@ automation:
       - service: xiaomi_aqara.play_ringtone
         data:
           gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 1
-          ringtone_vol: 1
+          ringtone_id: 2
+          ringtone_vol: 6
       - delay:
           seconds: 4
       - service: automation.turn_on
