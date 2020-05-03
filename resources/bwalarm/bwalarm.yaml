@@ -16,3 +16,21 @@ states:
   armed_home:
     immediate:
     - binary_sensor.motion_sensor_158d00044cce1a
+panel:
+  cameras: []
+users:
+- id: !secret cloud_user_id
+  name: Home Assistant Cloud
+  enabled: false
+  code: !secret cloud_user_id
+  picture: ha.png
+- id: !secret hassio_user_id
+  name: Hass.io
+  enabled: false
+  code: !secret hassio_user_id
+  picture: ha.png
+- id: !secret personal_user_id
+  name: !secret personal_user_name
+  enabled: false
+  code: !secret personal_user_id
+  picture: ha.png
