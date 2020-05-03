@@ -79,6 +79,16 @@ automation:
         data:
           message: 'HA SALTADO LA ALARMA!!! {{ states[states.alarm_control_panel.house.attributes.changed_by.split(".")[0]][ states.alarm_control_panel.house.attributes.changed_by.split(".")[1]].name }}'
 
+  - id: alarm_panic_mode
+    alias: "[Alarm] Panic mode activated"
+    trigger:
+      platform: template
+      value_template: "{{ states.alarm_control_panel.house.attributes.panic_mode == 'ACTIVE' }}"
+    action:
+      - service: notify.telegram
+        data:
+          message: "PANIC MODE ACTIVADO!!!"
+
   ####################################################
   ################# S I R E N A ######################
   ####################################################
