@@ -38,6 +38,8 @@ automation:
         entity_id: alarm_control_panel.house
         to: "pending"
     action:
+      - delay:
+          seconds: 3
       - service: xiaomi_aqara.play_ringtone
         data:
           gw_mac: !secret aqara_gateway_mac
