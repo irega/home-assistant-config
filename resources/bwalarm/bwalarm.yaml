@@ -2,7 +2,6 @@ platform: bwalarm
 name: House
 code: !secret alarm_code 
 panic_code: !secret panic_code
-# pending_time: 25 
 trigger_time: 600
 alarm: automation.alarm_triggered
 warning: automation.alarm_warning

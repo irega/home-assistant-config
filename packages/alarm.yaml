@@ -88,22 +88,6 @@ automation:
         data:
           message: 'HA SALTADO LA ALARMA!!! {{ states[states.alarm_control_panel.house.attributes.changed_by.split(".")[0]][ states.alarm_control_panel.house.attributes.changed_by.split(".")[1]].name }}'
 
-  - id: alarm_warning
-    alias: "[Alarm] Warning"
-    trigger:
-      - platform: state
-        entity_id: alarm_control_panel.house
-        to: "warning"
-    action:
-      - service: notify.telegram
-        data:
-          message: 'ALARM Warning {{ states[states.alarm_control_panel.house.attributes.changed_by.split(".")[0]][ states.alarm_control_panel.house.attributes.changed_by.split(".")[1]].name }}'
-      - service: xiaomi_aqara.play_ringtone
-        data:
-          gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 10013 # Se ha disparado la alarma, por favor desactivar.
-          ringtone_vol: 20
-
   ####################################################
   ################# S I R E N A ######################
   ####################################################
