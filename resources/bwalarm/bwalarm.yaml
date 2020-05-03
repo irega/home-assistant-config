@@ -11,7 +11,7 @@ enable_night_mode: false
 states:
   armed_away:
     immediate:
-    - binary_sensor.door_window_sensor_158d0003ce68d2
+    - binary_sensor.motion_sensor_158d00044cce1a
   armed_home:
     immediate:
-    - binary_sensor.door_window_sensor_158d0003ce68d2
+    - binary_sensor.motion_sensor_158d00044cce1a
