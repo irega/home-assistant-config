@@ -4,6 +4,8 @@ homeassistant:
       friendly_name: Sensor puerta entrada
     binary_sensor.motion_sensor_158d00044cce1a:
       friendly_name: Sensor movimiento pasillo
+    binary_sensor.motion_sensor_158d0003d1288c:
+      friendly_name: Sensor movimiento baño    
     sensor.illumination_04cf8cf312cd:
       friendly_name: Sensor iluminación pasillo
     climate.netatmo_smart_thermostat:
@@ -27,7 +29,7 @@ automation:
           title: "Snapshots are Stale"
           message: "Please visit the 'Hass.io Google Drive Backup' add-on status page for details."
         service: notify.telegram
-  - alias: Toggle luz Baño
+  - alias: Toggle luz dormitorio
     trigger:
       - platform: event
         event_type: xiaomi_aqara.click

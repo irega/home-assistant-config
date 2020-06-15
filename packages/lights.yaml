@@ -61,3 +61,29 @@ automation:
       - data:
           entity_id: light.gateway_light_04cf8cf312cd
         service: light.turn_off
+  - id: encender_luz_baño_movimiento
+    alias: Encender luz baño cuando hay movimiento
+    description: ""
+    trigger:
+      - entity_id: binary_sensor.motion_sensor_158d0003d1288c
+        from: "off"
+        platform: state
+        to: "on"
+    condition: []
+    action:
+      - data:
+          entity_id: light.luz_espejo_bano
+        service: light.turn_on
+  - id: apagar_luz_baño_movimiento
+    alias: Apagar luz baño cuando no hay movimiento
+    description: ""
+    trigger:
+      - entity_id: binary_sensor.motion_sensor_158d0003d1288c
+        from: "on"
+        platform: state
+        to: "off"
+    condition: []
+    action:
+      - data:
+          entity_id: light.luz_espejo_bano
+        service: light.turn_off
