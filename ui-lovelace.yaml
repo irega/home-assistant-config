@@ -286,7 +286,8 @@ views:
         type: media-control
     path: cocina
     title: Cocina
-  - badges: []
+  - badges: 
+      - entity: binary_sensor.motion_sensor_158d0003d1288c
     cards:
       - entities:
           - entity: light.luz_espejo_bano_1
@@ -331,6 +332,8 @@ views:
       - entities:
           - entity: automation.apagar_luz_entrada_cuando_no_hay_movimiento
           - entity: automation.encender_luz_entrada_cuando_hay_movimiento
+          - entity: automation.apagar_luz_bano_cuando_no_hay_movimiento
+          - entity: automation.encender_luz_bano_cuando_hay_movimiento
           - entity: automation.limpiar_casa
           - entity: automation.notificar_comienzo_limpieza_aspirador
           - entity: automation.notificar_error_aspirador
