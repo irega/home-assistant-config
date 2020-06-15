@@ -341,7 +341,7 @@ views:
           - entity: automation.notificar_limpieza_finalizada_aspirador
           - entity: automation.notificar_problema_resuelto_aspirador
           - entity: automation.reproducir_sonido_al_abrir_puerta_entrada
-          - entity: automation.toggle_luz_bano
+          - entity: automation.toggle_luz_dormitorio
           - entity: automation.notificar_error_backup
           - entity: automation.activar_modo_cama_cuando_se_agita_cubo
           - entity: automation.activar_modo_noche_cuando_se_golpea_cubo
