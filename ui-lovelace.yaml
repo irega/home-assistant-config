@@ -299,14 +299,6 @@ views:
         type: light
       - entity: light.luz_espejo_bano_2
         type: light
-      - entity: binary_sensor.switch_158d000373c0dc
-        hold_action:
-          action: more-info
-        show_icon: true
-        show_name: true
-        tap_action:
-          action: toggle
-        type: entity-button
     path: bano
     title: Baño
   - badges: []
@@ -317,6 +309,14 @@ views:
         hold_action:
           action: more-info
         name: Luz mesilla Sara
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
+      - entity: binary_sensor.switch_158d000373c0dc
+        hold_action:
+          action: more-info
         show_icon: true
         show_name: true
         tap_action:
