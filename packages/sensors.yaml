@@ -38,7 +38,7 @@ automation:
           click_type: single
     action:
       service: light.toggle
-      entity_id: light.luz_espejo_bano
+      entity_id: light.luz_dormitorio
   - alias: Activar modo cama cuando se agita cubo
     trigger:
       platform: event
