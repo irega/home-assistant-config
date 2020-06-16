@@ -286,8 +286,7 @@ views:
         type: media-control
     path: cocina
     title: Cocina
-  - badges: 
-      - entity: binary_sensor.motion_sensor_158d0003d1288c
+  - badges: []
     cards:
       - entities:
           - entity: light.luz_espejo_bano_1
@@ -301,22 +300,27 @@ views:
         type: light
     path: bano
     title: Baño
-  - badges: []
+  - badges: 
+      - entity: binary_sensor.motion_sensor_158d0003d1288c
     cards:
-      - entity: light.luz_dormitorio
+      - entity: light.luz_despacho
         type: light
-      - entity: switch.plug_158d000310c4a0
+      - entity: binary_sensor.switch_158d000373c0dc
         hold_action:
           action: more-info
-        name: Luz mesilla Sara
         show_icon: true
         show_name: true
         tap_action:
           action: toggle
         type: entity-button
-      - entity: binary_sensor.switch_158d000373c0dc
+    path: despacho
+    title: Despacho
+  - badges: []
+    cards:
+      - entity: switch.plug_158d000310c4a0
         hold_action:
           action: more-info
+        name: Luz mesilla Sara
         show_icon: true
         show_name: true
         tap_action:
@@ -332,8 +336,8 @@ views:
       - entities:
           - entity: automation.apagar_luz_entrada_cuando_no_hay_movimiento
           - entity: automation.encender_luz_entrada_cuando_hay_movimiento
-          - entity: automation.apagar_luz_bano_cuando_no_hay_movimiento
-          - entity: automation.encender_luz_bano_cuando_hay_movimiento
+          - entity: automation.apagar_luz_despacho_cuando_no_hay_movimiento
+          - entity: automation.encender_luz_despacho_cuando_hay_movimiento
           - entity: automation.limpiar_casa
           - entity: automation.notificar_comienzo_limpieza_aspirador
           - entity: automation.notificar_error_aspirador
@@ -341,7 +345,7 @@ views:
           - entity: automation.notificar_limpieza_finalizada_aspirador
           - entity: automation.notificar_problema_resuelto_aspirador
           - entity: automation.reproducir_sonido_al_abrir_puerta_entrada
-          - entity: automation.toggle_luz_dormitorio
+          - entity: automation.toggle_luz_despacho
           - entity: automation.notificar_error_backup
           - entity: automation.activar_modo_cama_cuando_se_agita_cubo
           - entity: automation.activar_modo_noche_cuando_se_golpea_cubo

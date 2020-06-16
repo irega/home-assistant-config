@@ -5,13 +5,13 @@ homeassistant:
     binary_sensor.motion_sensor_158d00044cce1a:
       friendly_name: Sensor movimiento pasillo
     binary_sensor.motion_sensor_158d0003d1288c:
-      friendly_name: Sensor movimiento baño    
+      friendly_name: Sensor movimiento despacho    
     sensor.illumination_04cf8cf312cd:
       friendly_name: Sensor iluminación pasillo
     climate.netatmo_smart_thermostat:
       friendly_name: Termostato
     binary_sensor.switch_158d000373c0dc:
-      friendly_name: Interruptor luz dormitorio
+      friendly_name: Interruptor luz despacho
     binary_sensor.cube_158d0002a6f5e7:
       friendly_name: Cubo salón
 
@@ -29,7 +29,7 @@ automation:
           title: "Snapshots are Stale"
           message: "Please visit the 'Hass.io Google Drive Backup' add-on status page for details."
         service: notify.telegram
-  - alias: Toggle luz dormitorio
+  - alias: Toggle luz despacho
     trigger:
       - platform: event
         event_type: xiaomi_aqara.click
@@ -38,7 +38,7 @@ automation:
           click_type: single
     action:
       service: light.toggle
-      entity_id: light.luz_dormitorio
+      entity_id: light.luz_despacho
   - alias: Activar modo cama cuando se agita cubo
     trigger:
       platform: event
