@@ -196,7 +196,13 @@ automation:
     condition:
       - condition: time
         weekday:
+          - mon
+          - tue
+          - wed
           - thu
+          - fri
+          - sat
+          - sun
     action:
       - data:
           entity_id: vacuum.xiaomi_vacuum_cleaner
