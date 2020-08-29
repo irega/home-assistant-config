@@ -1,6 +1,4 @@
-config:
-logbook:
-history:
+default_config:
 
 homeassistant:
   name: !secret home_name

@@ -371,7 +371,7 @@ views:
       - type: conditional
         conditions:
           - entity: binary_sensor.snapshots_stale
-            state_not: "on"
+            state_not: "off"
         card:
           type: markdown
           content: >-
