@@ -28,15 +28,15 @@ views:
     cards:
       - entity: climate.netatmo_smart_thermostat
         type: thermostat
-      # - entity: switch.shelly_shplg_s_26722d
-      #   hold_action:
-      #     action: more-info
-      #   name: Luz cómoda
-      #   show_icon: true
-      #   show_name: true
-      #   tap_action:
-      #     action: toggle
-      #   type: entity-button
+      - entity: switch.shelly_shplg_s_26722d
+        hold_action:
+          action: more-info
+        name: Luz auxiliar
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
       - entity: media_player.tv_salon
         type: media-control
       - cards:
@@ -300,19 +300,17 @@ views:
         type: light
     path: bano
     title: Baño
-  - badges: 
-      - entity: binary_sensor.motion_sensor_158d0003d1288c
+  - badges:  []
     cards:
-      # - entity: light.luz_despacho
-      #   type: light
-      # - entity: binary_sensor.switch_158d000373c0dc
-      #   hold_action:
-      #     action: more-info
-      #   show_icon: true
-      #   show_name: true
-      #   tap_action:
-      #     action: toggle
-      #   type: entity-button
+      - entity: switch.shelly_shsw_1_40f5202d3117
+        hold_action:
+          action: more-info
+        name: Luz auxiliar
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
     path: despacho
     title: Despacho
   - badges: []
@@ -345,7 +343,7 @@ views:
           - entity: automation.notificar_limpieza_finalizada_aspirador
           - entity: automation.notificar_problema_resuelto_aspirador
           - entity: automation.reproducir_sonido_al_abrir_puerta_entrada
-          - entity: automation.toggle_luz_despacho
+          # - entity: automation.toggle_luz_despacho
           - entity: automation.notificar_error_backup
           # - entity: automation.activar_modo_cama_cuando_se_agita_cubo
           # - entity: automation.activar_modo_noche_cuando_se_golpea_cubo

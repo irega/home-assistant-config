@@ -37,7 +37,7 @@ shelly:
     - all
   devices:      #devices to be added
     - id: "26722D"
-      name: Luz cómoda
+      name: Luz auxiliar
     - id: "40f5202d3117"
       name: Luz Despacho
 
