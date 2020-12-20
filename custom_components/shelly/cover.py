@@ -7,9 +7,15 @@ https://home-assistant.io/components/shelly/
 
 #pylint: disable=import-error
 from homeassistant.components.cover import (ATTR_POSITION,
-                                            CoverDevice, SUPPORT_CLOSE,
+                                            SUPPORT_CLOSE,
                                             SUPPORT_OPEN, SUPPORT_STOP,
                                             SUPPORT_SET_POSITION)
+
+try:
+    from homeassistant.components.cover import CoverEntity
+except:
+    from homeassistant.components.cover import \
+        CoverDevice as CoverEntity
 
 from .device import ShellyDevice
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
@@ -31,7 +37,7 @@ async def async_setup_entry(hass, _config_entry, async_add_entities):
         async_discover_cover
     )
 
-class ShellyCover(ShellyDevice, CoverDevice):
+class ShellyCover(ShellyDevice, CoverEntity):
     """Shelly cover device."""
 
     def __init__(self, dev, instance):
@@ -42,6 +48,7 @@ class ShellyCover(ShellyDevice, CoverDevice):
         self._motion_state = None
         self._support_position = None
         self._state = None
+        self._master_unit = True
         self.update()
 
     @property
@@ -93,7 +100,11 @@ class ShellyCover(ShellyDevice, CoverDevice):
 
     def set_cover_position(self, **kwargs):
         """Move the cover to a specific position."""
-        self._dev.set_position(kwargs[ATTR_POSITION])
+        pos = kwargs[ATTR_POSITION]
+        self._dev.set_position(pos)
+        self._position = pos
+        
+        self._update_ha_state()
 
     def stop_cover(self, **_kwargs):
         """Stop the cover."""

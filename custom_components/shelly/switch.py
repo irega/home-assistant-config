@@ -7,7 +7,11 @@ https://home-assistant.io/components/shelly/
 
 import logging
 
-from homeassistant.components.switch import SwitchDevice
+try:
+    from homeassistant.components.switch import SwitchEntity
+except:
+    from homeassistant.components.switch import \
+        SwitchDevice as SwitchEntity
 from homeassistant.helpers.entity import ToggleEntity
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from .const import *
@@ -36,10 +40,12 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         if isinstance(dev, dict):
             if 'firmware' in dev:
                 block = dev['block']
-                update_switch = getattr(block, 'firmware_switch', None)
+                beta = dev['beta']
+                name = 'beta_firmware_switch' if beta else 'firmware_switch'
+                update_switch = getattr(block, name, None)
                 if not update_switch:
                     async_add_entities(
-                        [ShellyFirmwareUpdate(block, instance)])
+                        [ShellyFirmwareUpdate(block, instance, beta)])
             return
         async_add_entities([ShellySwitch(dev, instance)])
 
@@ -49,7 +55,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         async_discover_switch
     )
 
-class ShellySwitch(ShellyDevice, SwitchDevice):
+class ShellySwitch(ShellyDevice, SwitchEntity):
     """Representation of an Shelly Switch."""
     def __init__(self, dev, instance):
         """Initialize an ShellySwitch."""
@@ -66,24 +72,36 @@ class ShellySwitch(ShellyDevice, SwitchDevice):
     def turn_on(self, **_kwargs):
         """Turn on device"""
         self._dev.turn_on()
+        self._state = True
+        
+        self._update_ha_state()
 
     def turn_off(self, **_kwargs):
         """Turn off device"""
         self._dev.turn_off()
+        self._state = False
+        
+        self._update_ha_state()
 
     def update(self):
         """Fetch new state data for this switch."""
         self._state = self._dev.state
 
-class ShellyFirmwareUpdate(ShellyBlock, SwitchDevice):
+class ShellyFirmwareUpdate(ShellyBlock, SwitchEntity):
     """Representation of a script entity."""
 
-    def __init__(self, block, instance):
-        block.firmware_switch = self
+    def __init__(self, block, instance, beta):
+        if beta:
+            block.beta_firmware_switch = self
+        else:
+            block.firmware_switch = self
         self._updating = False
-        ShellyBlock.__init__(self, block, instance, "_firmware_update")
+        prefix = "_beta_firmware_update" if beta else "_firmware_update"
+        ShellyBlock.__init__(self, block, instance, prefix)
         self.entity_id = "switch" + self.entity_id
         self._master_unit = False
+        self._beta = beta
+        self._removing = False
 
     @property
     def should_poll(self):
@@ -92,15 +110,19 @@ class ShellyFirmwareUpdate(ShellyBlock, SwitchDevice):
 
     @property
     def name(self):
+        if self._beta:
+            return "Upgrade BETA firmware " + ShellyBlock.name.fget(self)
         return "Upgrade firmware " + ShellyBlock.name.fget(self)
 
     @property
     def device_state_attributes(self):
         attrs = super().device_state_attributes
-        attrs[ATTRIBUTE_LATEST_FW] = \
-            self._block.info_values[ATTRIBUTE_LATEST_FW]
-        attrs[ATTRIBUTE_FW] = \
-            self._block.info_values[ATTRIBUTE_FW]
+        latest_key = ATTRIBUTE_LATEST_BETA_FW if self._beta else ATTRIBUTE_LATEST_FW
+        attrs[latest_key] = \
+            self._block.info_values[latest_key]
+        if ATTRIBUTE_FW in self._block.info_values:
+            attrs[ATTRIBUTE_FW] = \
+                self._block.info_values[ATTRIBUTE_FW]
         return attrs
 
     @property
@@ -111,13 +133,21 @@ class ShellyFirmwareUpdate(ShellyBlock, SwitchDevice):
     async def async_turn_on(self, **_kwargs):
         """Trig the firmware update"""
         self._updating = True
-        self.schedule_update_ha_state()
-        self._block.update_firmware()
+        
+        self._update_ha_state()
+        await self.hass.async_add_executor_job(self._block.update_firmware, self._beta)
 
     async def async_turn_off(self, **_kwargs):
         """Do nothing"""
-        self.schedule_update_ha_state()
+        
+        self._update_ha_state()
 
     def remove(self):
-        self._block.firmware_switch = None
+        if self._removing:
+            return
+        self._removing = True
         ShellyBlock.remove(self)
+        if self._beta:
+            self._block.beta_firmware_switch = None
+        else:
+            self._block.firmware_switch = None

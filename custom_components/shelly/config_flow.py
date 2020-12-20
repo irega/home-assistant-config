@@ -2,6 +2,7 @@
 # pylint: disable=dangerous-default-value
 import logging
 import voluptuous as vol
+import homeassistant.helpers.config_validation as cv
 from homeassistant import config_entries
 from homeassistant.core import callback
 
@@ -12,7 +13,8 @@ from .const import (DOMAIN,
                     ALL_ATTRIBUTES, CONF_ATTRIBUTES,
                     ALL_SENSORS, CONF_SENSORS,
                     CONF_MDNS, CONF_VERSION, CONF_UPGRADE_SWITCH,
-                    CONF_IGMPFIX, CONF_HOST_IP,
+                    CONF_UPGRADE_BETA_SWITCH,
+                    CONF_IGMPFIX, CONF_HOST_IP, CONF_MQTT_PORT,
                     CONF_CLOUD_AUTH_KEY, CONF_CLOUD_SERVER,
                     CONF_TMPL_NAME, CONF_ADDITIONAL_INFO,
                     CONF_OBJECT_ID_PREFIX,
@@ -39,8 +41,11 @@ class ShellyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_input(self, user_input={}):
+        title = "Shelly"
+        if user_input and 'id_prefix' in user_input:
+            title = user_input["id_prefix"] 
         return self.async_create_entry(
-            title=user_input["id_prefix"],
+            title=title,
             data=user_input
         )
 
@@ -117,8 +122,10 @@ class ShellyOptionsFlowHandler(config_entries.OptionsFlow):
                 self.v(CONF_MDNS): bool,
                 self.v(CONF_VERSION): bool,
                 self.v(CONF_UPGRADE_SWITCH): bool,
+                self.v(CONF_UPGRADE_BETA_SWITCH): bool,
                 self.v(CONF_IGMPFIX): bool,
-                self.v(CONF_HOST_IP) : str
+                self.v(CONF_HOST_IP) : str,
+                self.v(CONF_MQTT_PORT) : cv.positive_int
             })
             return self.async_show_form(step_id="config_1", data_schema=schema)
 

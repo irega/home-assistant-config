@@ -8,6 +8,8 @@ https://home-assistant.io/components/shelly/
 
 from datetime import timedelta, datetime
 import re
+import shutil
+import os
 import logging
 import time
 import asyncio
@@ -21,7 +23,18 @@ from homeassistant import config_entries
 from homeassistant.helpers import discovery
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.restore_state import RestoreStateData
-from homeassistant.helpers.entity_registry import ATTR_RESTORED
+from homeassistant.helpers.storage import Store
+from homeassistant.helpers.json import JSONEncoder
+try:
+    from homeassistant.components.zeroconf import (
+        async_get_instance as zeroconf_async_get_instance
+    )
+except:
+    zeroconf_async_get_instance = None
+try: #Backward compatible with HA
+    from homeassistant.helpers.entity_registry import ATTR_RESTORED
+except:
+    ATTR_RESTORED = None
 from homeassistant.helpers.entity import Entity
 from homeassistant.util import slugify, dt as dt_util
 from homeassistant.util import get_local_ip
@@ -32,7 +45,7 @@ from .configuration_schema import CONFIG_SCHEMA, CONFIG_SCHEMA_ROOT
 
 _LOGGER = logging.getLogger(__name__)
 
-__version__ = "0.1.8"
+__version__ = "0.2.1"
 VERSION = __version__
 
 async def async_setup(hass, config):
@@ -89,6 +102,7 @@ async def async_unload_entry(hass, config_entry):
     """Unload a config entry."""
     instance = hass.data[DOMAIN][config_entry.entry_id]
     await instance.stop()
+    await instance.clean()
     return True
 
 class ShellyInstance():
@@ -97,6 +111,7 @@ class ShellyInstance():
     def __init__(self, hass, config_entry, conf):
         self.hass = hass
         self.config_entry = config_entry
+        self.entry_id = self.config_entry.entry_id
         self.platforms = {}
         self.pys = None
         self.conf = conf
@@ -117,8 +132,11 @@ class ShellyInstance():
             self.conf_attributes.add(ATTRIBUTE_SWITCH + "_1")
             self.conf_attributes.add(ATTRIBUTE_SWITCH + "_2")
         sensors = self.conf.get(CONF_SENSORS, {})
+        if SENSOR_DEFAULT in sensors:
+            self.conf[CONF_SENSORS] = DEFAULT_SENSORS
         if SENSOR_ALL in sensors:
             self.conf[CONF_SENSORS] = [*ALL_SENSORS.keys()]
+        self._debug_msg = conf.get(CONF_DEBUG_ENABLE_INFO)
 
         hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, self.stop)
 
@@ -126,11 +144,17 @@ class ShellyInstance():
             self.start_up()
         )
 
+        self.shelly_config = {}
         #hass.loop.create_task(
         #    setup_frontend(self)
         #)
 
     async def start_up(self):
+
+        self.shelly_config = await self.async_load_file("config") or {}
+        last_ver = await self.async_get_config('version', '0.0.0')
+        await self.async_set_config('version', VERSION)
+
         conf = self.conf
         if conf.get(CONF_LOCAL_PY_SHELLY):
             _LOGGER.info("Loading local pyShelly")
@@ -142,21 +166,27 @@ class ShellyInstance():
         additional_info = conf.get(CONF_ADDITIONAL_INFO)
         update_interval = conf.get(CONF_SCAN_INTERVAL)
 
-        self.pys = pys = pyShelly()
+        self.pys = pys = pyShelly(self.hass.loop)
         _LOGGER.info("pyShelly, %s", pys.version())
         pys.cb_block_added.append(self._block_added)
         pys.cb_device_added.append(self._device_added)
         pys.cb_device_removed.append(self._device_removed)
+        pys.cb_save_cache = self._save_cache
+        pys.cb_load_cache = self._load_cache
         pys.username = conf.get(CONF_USERNAME)
         pys.password = conf.get(CONF_PASSWORD)
         pys.cloud_auth_key = conf.get(CONF_CLOUD_AUTH_KEY)
         pys.cloud_server = conf.get(CONF_CLOUD_SERVER)
+        if zeroconf_async_get_instance:
+            pys.zeroconf = await zeroconf_async_get_instance(self.hass)
         tmpl_name = conf.get(CONF_TMPL_NAME)
         if tmpl_name:
             pys.tmpl_name = tmpl_name
         if additional_info:
             pys.update_status_interval = timedelta(seconds=update_interval)
         pys.only_device_id = conf.get(CONF_ONLY_DEVICE_ID)
+        if pys.only_device_id:
+            pys.only_device_id = pys.only_device_id.upper()
         pys.igmp_fix_enabled = conf.get(CONF_IGMPFIX)
         pys.mdns_enabled = conf.get(CONF_MDNS)
         host_ip = conf.get(CONF_HOST_IP)
@@ -165,6 +195,7 @@ class ShellyInstance():
                 pys.host_ip = get_local_ip()
             else:
                 pys.host_ip = host_ip
+        pys.mqtt_port = conf.get(CONF_MQTT_PORT, 0)
         pys.start()
         pys.discover()
 
@@ -177,7 +208,6 @@ class ShellyInstance():
                     'extra' : {'ip-addr': pys.host_ip}}
             self.add_device("sensor", attr)
 
-        #Remove entities that have change type
         entity_reg = \
             await self.hass.helpers.entity_registry.async_get_registry()
         entities_to_remove = []
@@ -187,32 +217,35 @@ class ShellyInstance():
             if entity.platform == "shelly":
                 entity_id = entity.entity_id
                 entity_id = re.sub("_[0-9]+$", "", entity_id)
-                if entity_id.startswith("sensor.") and \
-                  (entity_id.endswith("_switch") or \
-                     entity_id.endswith("_power") or \
-                     entity_id.endswith("_door_window") or \
-                     entity_id.endswith("_flood") or \
-                     entity_id.endswith("_mqtt_connected_attr") or \
-                     entity_id.endswith("_over_temp_attr") or \
-                     entity_id.endswith("_over_power_attr") \
-                  ):
+                unique_id = entity.unique_id.lower()
+                if last_ver == '0.0.0':
+                    #Remove entities that have change type
+                    if entity_id.startswith("sensor.") and \
+                    (entity_id.endswith("_switch") or \
+                        entity_id.endswith("_power") or \
+                        entity_id.endswith("_door_window") or \
+                        entity_id.endswith("_flood") or \
+                        entity_id.endswith("_mqtt_connected_attr") or \
+                        entity_id.endswith("_over_temp_attr") or \
+                        entity_id.endswith("_over_power_attr") \
+                    ):
+                        entities_to_remove.append(entity.entity_id)
+                    elif entity_id.startswith("sensor.") and \
+                        entity_id.endswith("_consumption") and \
+                        not entity_id.endswith("total_consumption") and \
+                        not entity_id.endswith("current_consumption"):
+                        entities_to_remove.append(entity.entity_id)
+                    elif entity_id.startswith("binary_sensor.") and \
+                        entity_id.endswith("_cloud_status_attr"):
+                        entities_to_remove.append(entity.entity_id)
+                    elif entity_id.endswith("_attr"):
+                        entities_to_fix_attr.append(entity.entity_id)
+                if unique_id.endswith("_firmware_update"):
                     entities_to_remove.append(entity.entity_id)
-                elif entity_id.startswith("sensor.") and \
-                    entity_id.endswith("_consumption") and \
-                    not entity_id.endswith("total_consumption") and \
-                    not entity_id.endswith("current_consumption"):
-                    entities_to_remove.append(entity.entity_id)
-                elif entity_id.startswith("binary_sensor.") and \
-                   entity_id.endswith("_cloud_status_attr"):
-                    entities_to_remove.append(entity.entity_id)
-                elif entity_id.startswith("switch.") and \
-                   entity_id.endswith("_firmware_update"):
-                    entities_to_remove.append(entity.entity_id)
-                elif entity_id.endswith("_attr"):
-                    entities_to_fix_attr.append(entity.entity_id)
-                if "_shdw_" in entity_id or \
-                   "_shwt_" in entity_id or \
-                   "_shht_" in entity_id:
+                elif "_shdw" in unique_id or \
+                   "_shwt" in unique_id or \
+                   "_shht" in unique_id or \
+                   "_shbtn_1" in unique_id:               
                     #todo check last_seen
                     data = await RestoreStateData.async_get_instance(self.hass)
                     if entity.entity_id in data.last_states:
@@ -221,7 +254,8 @@ class ShellyInstance():
                         if last_seen > restore_expired:
                             state = data.state
                             attr = dict(state.attributes)
-                            attr[ATTR_RESTORED] = True
+                            if ATTR_RESTORED:
+                                attr[ATTR_RESTORED] = True
                             self.hass.states.async_set(entity.entity_id, \
                                                         state.state, attr)
 
@@ -241,7 +275,8 @@ class ShellyInstance():
     async def stop(self, _=None):
         """Stop Shelly."""
         _LOGGER.info("Shutting down Shelly")
-        self.pys.close()
+        if self.pys:
+            self.pys.close()
 
     def update_options(self, options):
         pass
@@ -259,7 +294,7 @@ class ShellyInstance():
                 elif decimals == 0:
                     value = round(value)
             if add_unit and CONF_UNIT in settings:
-                value = str(value) + ' '  + settings[CONF_UNIT]
+                value = str(value) + ' ' + settings[CONF_UNIT]
         return value
 
     def get_settings(self, *ids):
@@ -337,14 +372,25 @@ class ShellyInstance():
 
         if hass_data['discover']:
             if hass_data['allow_upgrade_switch']:
-                has_update = block.info_values.get('has_firmware_update', False)
+                has_update = block.has_fw_update()
+                #info_values.get('has_firmware_update', False)
                 update_switch = getattr(block, 'firmware_switch', None)
                 if has_update:
                     if update_switch is None:
-                        attr = {'firmware': True, 'block':block}
+                        attr = {'firmware': True, 'block':block, 'beta':False}
                         self.add_device("switch", attr)
                 elif update_switch is not None:
                     update_switch.remove()
+                    
+            if hass_data['allow_upgrade_beta_switch']:
+                has_beta_update = block.has_fw_update(True)
+                update_beta_switch = getattr(block, 'beta_firmware_switch', None)
+                if has_beta_update:
+                    if update_beta_switch is None:
+                        attr = {'firmware': True, 'block':block, 'beta':True}
+                        self.add_device("switch", attr)
+                elif update_beta_switch is not None:
+                    update_beta_switch.remove()
 
             #block_key = _get_block_key(block)
             #entity_reg = \
@@ -376,6 +422,8 @@ class ShellyInstance():
         block.hass_data = {
             'allow_upgrade_switch' :
                 self._get_specific_config_root(CONF_UPGRADE_SWITCH, block.id),
+            'allow_upgrade_beta_switch' :
+                self._get_specific_config_root(CONF_UPGRADE_BETA_SWITCH, block.id),
             'sensor_cfg' : self._get_sensor_config(block.id),
             'discover': discover_block
         }
@@ -417,7 +465,12 @@ class ShellyInstance():
         if dev.device_type == "ROLLER":
             self.add_device("cover", dev)
         elif dev.device_type == "RELAY":
+            load_as_light = False
             if device_config.get(CONF_LIGHT_SWITCH):
+                load_as_light = True
+            elif dev.as_light():
+                load_as_light = True
+            if load_as_light:
                 self.add_device("light", dev)
             else:
                 self.add_device("switch", dev)
@@ -450,5 +503,41 @@ class ShellyInstance():
         else:
             _LOGGER.error("Unknown device type, %s", dev.device_type)
 
+    async def clean(self):
+        path = Store(self.hass, "1", "shelly/" + self.entry_id).path
+        await self.hass.async_add_executor_job(shutil.rmtree, path)
+        root_path = Store(self.hass, "1", "shelly").path
+        if not os.listdir(root_path) :
+            os.rmdir(root_path)
+
     def _device_removed(self, dev, _code):
         dev.shelly_device.remove()
+
+    def _store(self, name):
+        path = f"shelly/" + self.entry_id + "/" + name
+        return Store(self.hass, "1", path, encoder=JSONEncoder)
+
+    async def async_set_config(self, name, value):
+        if self.shelly_config.get(name) != value:
+            self.shelly_config[name] = value
+            await self.async_save_file('config', self.shelly_config)
+
+    async def async_get_config(self, name, default=None):
+        return self.shelly_config.get(name, default)
+
+    async def async_save_file(self, name, data):
+        await self._store(name).async_save(data)
+
+    async def async_load_file(self, name):
+        return await self._store(name).async_load()
+
+    def _save_cache(self, name, data):
+        asyncio.run_coroutine_threadsafe(
+            self._store(name).async_save(data), self.hass.loop
+        )
+
+    def _load_cache(self, name):
+        data = asyncio.run_coroutine_threadsafe(
+            self._store(name).async_load(), self.hass.loop
+        ).result()
+        return data
