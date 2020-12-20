@@ -4,16 +4,16 @@ homeassistant:
       friendly_name: Sensor puerta entrada
     binary_sensor.motion_sensor_158d00044cce1a:
       friendly_name: Sensor movimiento pasillo
-    binary_sensor.motion_sensor_158d0003d1288c:
-      friendly_name: Sensor movimiento despacho    
+    # binary_sensor.motion_sensor_158d0003d1288c:
+    #   friendly_name: Sensor movimiento despacho    
     sensor.illumination_04cf8cf312cd:
       friendly_name: Sensor iluminación pasillo
     climate.netatmo_smart_thermostat:
       friendly_name: Termostato
-    binary_sensor.switch_158d000373c0dc:
-      friendly_name: Interruptor luz despacho
-    binary_sensor.cube_158d0002a6f5e7:
-      friendly_name: Cubo salón
+    # binary_sensor.switch_158d000373c0dc:
+    #   friendly_name: Interruptor luz despacho
+    # binary_sensor.cube_158d0002a6f5e7:
+    #   friendly_name: Cubo salón
 
 automation:
   - id: BACKUP Notificar ERROR
@@ -29,75 +29,75 @@ automation:
           title: "Snapshots are Stale"
           message: "Please visit the 'Hass.io Google Drive Backup' add-on status page for details."
         service: notify.telegram
-  - alias: Toggle luz despacho
-    trigger:
-      - platform: event
-        event_type: xiaomi_aqara.click
-        event_data:
-          entity_id: binary_sensor.switch_158d000373c0dc
-          click_type: single
-    action:
-      service: light.toggle
-      entity_id: light.luz_despacho
-  - alias: Activar modo cama cuando se agita cubo
-    trigger:
-      platform: event
-      event_type: xiaomi_aqara.cube_action
-      event_data:
-        entity_id: binary_sensor.cube_158d0002a6f5e7
-        action_type: shake_air
-    action:
-      - service: script.activar_modo_cama
-  - alias: Activar modo noche cuando se golpea cubo
-    trigger:
-      platform: event
-      event_type: xiaomi_aqara.cube_action
-      event_data:
-        entity_id: binary_sensor.cube_158d0002a6f5e7
-        action_type: tap_twice
-    action:
-      - service: script.activar_modo_noche
+  # - alias: Toggle luz despacho
+  #   trigger:
+  #     - platform: event
+  #       event_type: xiaomi_aqara.click
+  #       event_data:
+  #         entity_id: binary_sensor.switch_158d000373c0dc
+  #         click_type: single
+  #   action:
+  #     service: light.toggle
+  #     entity_id: light.luz_despacho
+  # - alias: Activar modo cama cuando se agita cubo
+  #   trigger:
+  #     platform: event
+  #     event_type: xiaomi_aqara.cube_action
+  #     event_data:
+  #       entity_id: binary_sensor.cube_158d0002a6f5e7
+  #       action_type: shake_air
+  #   action:
+  #     - service: script.activar_modo_cama
+  # - alias: Activar modo noche cuando se golpea cubo
+  #   trigger:
+  #     platform: event
+  #     event_type: xiaomi_aqara.cube_action
+  #     event_data:
+  #       entity_id: binary_sensor.cube_158d0002a6f5e7
+  #       action_type: tap_twice
+  #   action:
+  #     - service: script.activar_modo_noche
 
-script:
-  activar_modo_cama:
-    alias: Activar modo cama
-    sequence:
-      - service: switch.turn_off
-        data:
-          entity_id: switch.shelly_shplg_s_26722d
-      - service: light.turn_off
-        data:
-          entity_id: light.luz_espejo_bano
-      - service: light.turn_off
-        data:
-          entity_id: light.luz_dormitorio
-      - service: media_player.turn_off
-        data:
-          entity_id: media_player.tv_cocina
-      - service: media_player.turn_off
-        data:
-          entity_id: media_player.tv_salon
-      - service: switch.turn_on
-        data:
-          entity_id: switch.plug_158d000310c4a0
-  activar_modo_noche:
-    alias: Activar modo noche
-    sequence:
-      - service: switch.turn_off
-        data:
-          entity_id: switch.shelly_shplg_s_26722d
-      - service: light.turn_off
-        data:
-          entity_id: light.luz_espejo_bano
-      - service: light.turn_off
-        data:
-          entity_id: light.luz_dormitorio
-      - service: media_player.turn_off
-        data:
-          entity_id: media_player.tv_cocina
-      - service: media_player.turn_off
-        data:
-          entity_id: media_player.tv_salon
-      - service: switch.turn_off
-        data:
-          entity_id: switch.plug_158d000310c4a0
+# script:
+#   activar_modo_cama:
+#     alias: Activar modo cama
+#     sequence:
+#       - service: switch.turn_off
+#         data:
+#           entity_id: switch.shelly_shplg_s_26722d
+#       - service: light.turn_off
+#         data:
+#           entity_id: light.luz_espejo_bano
+#       - service: light.turn_off
+#         data:
+#           entity_id: light.luz_dormitorio
+#       - service: media_player.turn_off
+#         data:
+#           entity_id: media_player.tv_cocina
+#       - service: media_player.turn_off
+#         data:
+#           entity_id: media_player.tv_salon
+#       - service: switch.turn_on
+#         data:
+#           entity_id: switch.plug_158d000310c4a0
+#   activar_modo_noche:
+#     alias: Activar modo noche
+#     sequence:
+#       - service: switch.turn_off
+#         data:
+#           entity_id: switch.shelly_shplg_s_26722d
+#       - service: light.turn_off
+#         data:
+#           entity_id: light.luz_espejo_bano
+#       - service: light.turn_off
+#         data:
+#           entity_id: light.luz_dormitorio
+#       - service: media_player.turn_off
+#         data:
+#           entity_id: media_player.tv_cocina
+#       - service: media_player.turn_off
+#         data:
+#           entity_id: media_player.tv_salon
+#       - service: switch.turn_off
+#         data:
+#           entity_id: switch.plug_158d000310c4a0

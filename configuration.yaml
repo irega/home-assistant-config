@@ -31,5 +31,14 @@ tts:
   - platform: google_translate
 
 shelly:
+  discovery: false
+  version: true #add version sensor
+  sensors:
+    - all
+  devices:      #devices to be added
+    - id: "26722D"
+      name: Luz cómoda
+    - id: "40f5202d3117"
+      name: Luz Despacho
 
 alarm_control_panel: !include resources/bwalarm/bwalarm.yaml
