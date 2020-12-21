@@ -28,8 +28,8 @@ homeassistant:
   customize:
     # switch.shelly_shplg_s_26722d:
     #   friendly_name: Luz cómoda
-    # switch.plug_158d000310c4a0:
-    #   friendly_name: Luz mesilla Sara
+    switch.plug_158d000310c4a0:
+      friendly_name: Luz mesilla Iván
 
 automation:
   - id: "1578412911487"
