@@ -1,18 +1,18 @@
-samsungtv:
-  - host: !secret tv_salon_ip
-    turn_on_action:
-      - service: wake_on_lan.send_magic_packet
-        data:
-          mac: !secret tv_salon_mac
-  - host: !secret tv_cocina_ip
-    turn_on_action:
-      - service: wake_on_lan.send_magic_packet
-        data:
-          mac: !secret tv_cocina_mac
+# samsungtv:
+#   - host: !secret tv_salon_ip
+#     turn_on_action:
+#       - service: wake_on_lan.send_magic_packet
+#         data:
+#           mac: !secret tv_salon_mac
+#   - host: !secret tv_cocina_ip
+#     turn_on_action:
+#       - service: wake_on_lan.send_magic_packet
+#         data:
+#           mac: !secret tv_cocina_mac
 
-homeassistant:
-  customize:
-    media_player.tv_salon:
-      friendly_name: TV salón
-    media_player.tv_cocina:
-      friendly_name: TV cocina
+# homeassistant:
+#   customize:
+#     media_player.tv_salon:
+#       friendly_name: TV salón
+#     media_player.tv_cocina:
+#       friendly_name: TV cocina
