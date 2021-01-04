@@ -1,9 +1,3 @@
-media_player:
-  - platform: samsungtv_tizen
-    name: TV Cocina
-    host: !secret tv_cocina_ip
-    mac: !secret tv_cocina_mac
-
 samsungtv:
   - host: !secret tv_salon_ip
     name: TV Salon
@@ -11,12 +5,12 @@ samsungtv:
       - service: wake_on_lan.send_magic_packet
         data:
           mac: !secret tv_salon_mac
-  # - host: !secret tv_cocina_ip
-  #   name: TV Cocina
-  #   turn_on_action:
-  #     - service: wake_on_lan.send_magic_packet
-  #       data:
-  #         mac: !secret tv_cocina_mac
+  - host: !secret tv_cocina_ip
+    name: TV Cocina
+    turn_on_action:
+      - service: wake_on_lan.send_magic_packet
+        data:
+          mac: !secret tv_cocina_mac
 
 homeassistant:
   customize:
