@@ -1,0 +1,5 @@
+switch:
+  - platform: wake_on_lan
+    name: PC Iván
+    host: !secret pc_ivan_ip
+    mac: !secret pc_ivan_mac 
