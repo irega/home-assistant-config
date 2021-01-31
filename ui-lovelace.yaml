@@ -312,6 +312,7 @@ views:
           action: toggle
         type: entity-button
       - type: button
+        entity: switch.pc_ivan
         name: Encender PC Iván
         show_state: false
         tap_action:
