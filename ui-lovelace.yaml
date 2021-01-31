@@ -311,6 +311,14 @@ views:
         tap_action:
           action: toggle
         type: entity-button
+      - type: button
+        name: Encender PC Iván
+        show_state: false
+        tap_action:
+          action: call-service
+          service: script.turn_on
+          service_data:
+          entity_id: switch.pc_ivan
     path: despacho
     title: Despacho
   - badges: []
