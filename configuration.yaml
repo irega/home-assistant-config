@@ -40,5 +40,7 @@ shelly:
       name: Luz auxiliar
     - id: "40f5202d3117"
       name: Luz Despacho
+    - id: "40f5202e07d9"
+      name: Luz Dormitorio
 
 alarm_control_panel: !include resources/bwalarm/bwalarm.yaml

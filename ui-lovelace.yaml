@@ -324,6 +324,15 @@ views:
     title: Despacho
   - badges: []
     cards:
+      - entity: switch.shelly_shsw_1_40f5202e07d9
+        hold_action:
+          action: more-info
+        name: Luz Dormitorio
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
       - entity: switch.plug_158d000310c4a0
         hold_action:
           action: more-info
