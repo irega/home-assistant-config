@@ -344,6 +344,19 @@ views:
         type: entity-button
     path: dormitorio
     title: Dormitorio
+  - badges: []
+    cards:
+      - entity: light.luz_vestidor
+        hold_action:
+          action: more-info
+        name: Luz Vestidor
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
+    path: vestidor
+    title: Vestidor
   - badges:
       - entity: sun.sun
     cards:
