@@ -15,14 +15,14 @@ light:
       - light.luz_espejo_bano_1
       - light.luz_espejo_bano_2
 
-# discovery:
-#   ignore:
-#     - yeelight
+discovery:
+  ignore:
+    - yeelight
 
-# yeelight:
-#   devices:
-#     !secret luz_despacho_ip:
-#       name: Luz Despacho
+yeelight:
+  devices:
+    !secret luz_vestidor_ip:
+      name: Luz Vestidor
 
 homeassistant:
   customize:
