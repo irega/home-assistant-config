@@ -342,6 +342,15 @@ views:
         tap_action:
           action: toggle
         type: entity-button
+      - entity: switch.meross_2009070309142890827948e1e93054fe
+        hold_action:
+          action: more-info
+        name: Luz mesilla Sara
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
     path: dormitorio
     title: Dormitorio
   - badges: []
