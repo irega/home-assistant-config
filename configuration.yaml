@@ -43,4 +43,9 @@ shelly:
     - id: "40f5202e07d9"
       name: Luz Dormitorio
 
+meross:
+  username: !secret meross_userame
+  password: !secret meross_password
+  scan_interval: 30
+
 alarm_control_panel: !include resources/bwalarm/bwalarm.yaml
