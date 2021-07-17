@@ -342,7 +342,7 @@ views:
         tap_action:
           action: toggle
         type: entity-button
-      - entity: switch.meross_2009070309142890827948e1e93054fe
+      - entity: switch.luz_mesilla_sara_mss210_main_channel
         hold_action:
           action: more-info
         name: Luz mesilla Sara
