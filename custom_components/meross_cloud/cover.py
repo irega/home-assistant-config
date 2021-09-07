@@ -11,13 +11,18 @@ from meross_iot.model.exception import CommandTimeoutError
 from meross_iot.model.push.bind import BindPushNotification
 from meross_iot.model.push.generic import GenericPushNotification
 
-from .common import (PLATFORM, MANAGER, log_exception, calculate_cover_id)
+from .common import (PLATFORM, MANAGER, log_exception, RELAXED_SCAN_INTERVAL, calculate_cover_id)
 
 # Conditional Light import with backwards compatibility
-from homeassistant.components.cover import CoverEntity
+try:
+    from homeassistant.components.cover import CoverEntity
+except ImportError:
+    from homeassistant.components.cover import CoverDevice as CoverEntity
 
 
 _LOGGER = logging.getLogger(__name__)
+PARALLEL_UPDATES = 1
+SCAN_INTERVAL = timedelta(seconds=RELAXED_SCAN_INTERVAL)
 
 
 class MerossCoverWrapper(GarageOpenerMixin, BaseDevice):
@@ -118,10 +123,10 @@ class CoverEntityWrapper(CoverEntity):
 
     # region Platform-specific command methods
     async def async_close_cover(self, **kwargs):
-        await self._device.async_close(channel=self._channel_id, skip_rate_limits=True)
+        await self._device.async_close(channel=self._channel_id)
 
     async def async_open_cover(self, **kwargs):
-        await self._device.async_open(channel=self._channel_id, skip_rate_limits=True)
+        await self._device.async_open(channel=self._channel_id)
 
     def open_cover(self, **kwargs: Any) -> None:
         self.hass.async_add_executor_job(self.async_open_cover, **kwargs)
