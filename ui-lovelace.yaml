@@ -342,15 +342,15 @@ views:
         tap_action:
           action: toggle
         type: entity-button
-      - entity: switch.luz_mesilla_sara_mss210_main_channel
-        hold_action:
-          action: more-info
-        name: Luz mesilla Sara
-        show_icon: true
-        show_name: true
-        tap_action:
-          action: toggle
-        type: entity-button
+      # - entity: switch.luz_mesilla_sara_mss210_main_channel
+      #   hold_action:
+      #     action: more-info
+      #   name: Luz mesilla Sara
+      #   show_icon: true
+      #   show_name: true
+      #   tap_action:
+      #     action: toggle
+      #   type: entity-button
     path: dormitorio
     title: Dormitorio
   - badges: []
