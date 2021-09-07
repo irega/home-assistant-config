@@ -10,10 +10,18 @@ from meross_iot.model.enums import OnlineStatus, Namespace, SprayMode
 from meross_iot.model.exception import CommandTimeoutError
 from meross_iot.model.push.generic import GenericPushNotification
 
-from .common import (PLATFORM, MANAGER, calculate_humidifier_id, log_exception)
-from homeassistant.components.fan import FanEntity, SUPPORT_PRESET_MODE
+from .common import (PLATFORM, MANAGER, calculate_humidifier_id, log_exception, SENSOR_POLL_INTERVAL_SECONDS)
+
+# Conditional import for fan device device
+try:
+    from homeassistant.components.fan import FanEntity, SUPPORT_SET_SPEED
+except ImportError:
+    from homeassistant.components.switch import FanDevice as FanEntity
+
 
 _LOGGER = logging.getLogger(__name__)
+PARALLEL_UPDATES = 1
+SCAN_INTERVAL = timedelta(seconds=SENSOR_POLL_INTERVAL_SECONDS)
 
 
 class MerossHumidifierDevice(SprayMixin, BaseDevice):
@@ -116,18 +124,18 @@ class HumidifierEntityWrapper(FanEntity):
 
     # region Platform-specific command methods
     async def async_turn_off(self, **kwargs) -> None:
-        await self._device.async_set_mode(mode=SprayMode.OFF, channel=self._channel_id, skip_rate_limits=True)
+        await self._device.async_set_mode(mode=SprayMode.OFF, channel=self._channel_id)
 
     async def async_turn_on(self, speed: Optional[str] = None, **kwargs: Any) -> None:
         if speed is None:
             mode = SprayMode.CONTINUOUS
         else:
             mode = SprayMode[speed]
-        await self._device.async_set_mode(mode=mode, channel=self._channel_id, skip_rate_limits=True)
+        await self._device.async_set_mode(mode=mode, channel=self._channel_id)
 
     async def async_set_speed(self, speed: str) -> None:
         mode = SprayMode[speed]
-        await self._device.async_set_mode(mode=mode, channel=self._channel_id, skip_rate_limits=True)
+        await self._device.async_set_mode(mode=mode, channel=self._channel_id)
 
     def set_direction(self, direction: str) -> None:
         # Not supported
@@ -149,7 +157,7 @@ class HumidifierEntityWrapper(FanEntity):
     # region Platform specific properties
     @property
     def supported_features(self) -> int:
-        return SUPPORT_PRESET_MODE
+        return SUPPORT_SET_SPEED
 
     @property
     def is_on(self) -> Optional[bool]:
@@ -159,28 +167,15 @@ class HumidifierEntityWrapper(FanEntity):
         return mode != SprayMode.OFF
 
     @property
-    def percentage(self) -> Optional[int]:
-        mode = self._device.get_current_mode(channel=self._channel_id)
-        if mode == SprayMode.OFF:
-            return 0
-        elif mode == SprayMode.INTERMITTENT:
-            return 50
-        elif mode == SprayMode.CONTINUOUS:
-            return 100
-        else:
-            raise ValueError("Invalid SprayMode value.")
+    def speed_list(self) -> list:
+        return [e.name for e in SprayMode]
 
     @property
-    def preset_mode(self) -> Optional[str]:
+    def speed(self) -> Optional[str]:
         mode = self._device.get_current_mode(channel=self._channel_id)
-        if mode is not None:
-            return mode.name
-        else:
+        if mode is None:
             return None
-
-    @property
-    def preset_modes(self) -> list[str]:
-        return [x.name for x in SprayMode]
+        return mode.name
 
     # endregion
 

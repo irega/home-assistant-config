@@ -15,13 +15,18 @@ from meross_iot.model.enums import OnlineStatus, Namespace
 from meross_iot.model.exception import CommandTimeoutError
 from meross_iot.model.push.generic import GenericPushNotification
 
-from .common import (PLATFORM, MANAGER, calculate_switch_id, log_exception)
+from .common import (PLATFORM, MANAGER, calculate_switch_id, log_exception, SENSOR_POLL_INTERVAL_SECONDS)
 
 # Conditional import for switch device
-from homeassistant.components.switch import SwitchEntity
+try:
+    from homeassistant.components.switch import SwitchEntity
+except ImportError:
+    from homeassistant.components.switch import SwitchDevice as SwitchEntity
 
 
 _LOGGER = logging.getLogger(__name__)
+PARALLEL_UPDATES = 1
+SCAN_INTERVAL = timedelta(seconds=SENSOR_POLL_INTERVAL_SECONDS)
 
 
 class MerossSwitchDevice(ToggleXMixin, BaseDevice):
@@ -97,10 +102,10 @@ class SwitchEntityWrapper(SwitchEntity):
         return self._device.is_on(channel=self._channel_id)
 
     async def async_turn_off(self, **kwargs) -> None:
-        await self._device.async_turn_off(channel=self._channel_id, skip_rate_limits=True)
+        await self._device.async_turn_off(channel=self._channel_id)
 
     async def async_turn_on(self, **kwargs) -> None:
-        await self._device.async_turn_on(channel=self._channel_id, skip_rate_limits=True)
+        await self._device.async_turn_on(channel=self._channel_id)
 
     def turn_on(self, **kwargs: Any) -> None:
         self.hass.async_add_executor_job(self.async_turn_on, **kwargs)

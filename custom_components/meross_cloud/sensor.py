@@ -3,16 +3,15 @@ from datetime import datetime
 from datetime import timedelta
 from typing import Optional, Iterable, Union, List
 
-from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import DEVICE_CLASS_TEMPERATURE, TEMP_CELSIUS, DEVICE_CLASS_HUMIDITY, \
     DEVICE_CLASS_POWER, POWER_WATT
-
-from homeassistant.const import PERCENTAGE
+try:
+    from homeassistant.const import PERCENTAGE
+except ImportError:
+    from homeassistant.const import UNIT_PERCENTAGE as PERCENTAGE
 
 from homeassistant.helpers.entity import Entity
-from homeassistant.helpers.typing import StateType
 from meross_iot.controller.device import BaseDevice
-from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT
 from meross_iot.controller.mixins.electricity import ElectricityMixin
 from meross_iot.controller.known.subdevice import Ms100Sensor, Mts100v3Valve
 from meross_iot.manager import MerossManager, RateLimitChecker
@@ -22,39 +21,32 @@ from meross_iot.model.push.generic import GenericPushNotification
 
 from . import MEROSS_CLOUD_VERSION
 from .common import (PLATFORM, MANAGER, log_exception, HA_SENSOR, calculate_sensor_id,
-                     HA_SENSOR_POLL_INTERVAL_SECONDS, invoke_method_or_property,
-                     extract_subdevice_notification_data, ATTR_API_CALLS_PER_SECOND, ATTR_DELAYED_API_CALLS_PER_SECOND,
-                     ATTR_DROPPED_API_CALLS_PER_SECOND, SENSOR_SAMPLE_CACHE_INTERVAL_SECONDS)
+                     SENSOR_POLL_INTERVAL_SECONDS, invoke_method_or_property, LIMITER,
+                     extract_subdevice_notification_data)
 
 _LOGGER = logging.getLogger(__name__)
 PARALLEL_UPDATES = 1
-SCAN_INTERVAL = timedelta(seconds=HA_SENSOR_POLL_INTERVAL_SECONDS)
+SCAN_INTERVAL = timedelta(seconds=SENSOR_POLL_INTERVAL_SECONDS)
+#SCAN_INTERVAL = timedelta(milliseconds=100)
 
 
-class ManagerMonitoringSensor(SensorEntity):
-    def __init__(self, manager: MerossManager):
-        self._manager = manager
-        self._state = None
-        self._state_attrs = {
-            ATTR_API_CALLS_PER_SECOND: 0,
-            ATTR_DELAYED_API_CALLS_PER_SECOND: 0,
-            ATTR_DROPPED_API_CALLS_PER_SECOND: 0
-        }
+class ApiMonitoringSensor(Entity):
+    def __init__(self, limiter: RateLimitChecker):
+        self._limiter = limiter
 
     async def async_added_to_hass(self) -> None:
-        self.hass.data[PLATFORM]["ADDED_ENTITIES_IDS"].add(self.unique_id)
+        pass
 
     async def async_will_remove_from_hass(self) -> None:
-        self.hass.data[PLATFORM]["ADDED_ENTITIES_IDS"].remove(self.unique_id)
-        del self.hass.data[PLATFORM][HA_SENSOR][self.unique_id]
+        pass
 
     @property
     def unique_id(self) -> str:
-        return "manager#sensor"
+        return "manager#API"
 
     @property
     def name(self) -> str:
-        return "Manager MQTT messages/s"
+        return "Meross Manager API Stats"
 
     @property
     def device_info(self):
@@ -68,7 +60,7 @@ class ManagerMonitoringSensor(SensorEntity):
 
     @property
     def available(self) -> bool:
-        return self._manager is not None
+        return True
 
     @property
     def should_poll(self) -> bool:
@@ -79,50 +71,23 @@ class ManagerMonitoringSensor(SensorEntity):
         return None  # Generic sensor
 
     @property
-    def state(self) -> StateType:
+    def state(self) -> Union[None, str, int, float]:
         """Return the state of the entity."""
-        return self._state
-
-    @property
-    def extra_state_attributes(self):
-        """Return the state attributes of the device."""
-        return self._state_attrs
+        self._limiter.global_rate_limiter._add_tokens()
+        return self._limiter.global_rate_limiter.current_window_hitrate
 
     @property
     def unit_of_measurement(self) -> Optional[str]:
-        """Return the unit of measurement of this entity, if any."""
-        return "msg/s"
-
-    @property
-    def icon(self):
-        """Return the icon to use in the frontend."""
-        return "mdi:cloud"
-
-    async def async_update(self):
-        """Fetch API state from manager"""
-        interval = timedelta(seconds=HA_SENSOR_POLL_INTERVAL_SECONDS)
-        call_stats = self._manager.mqtt_call_stats.get_api_stats(time_window=interval)
-        self._state = round(call_stats.global_stats.total_calls/HA_SENSOR_POLL_INTERVAL_SECONDS, 4)
-
-        delayed_stats = self._manager.mqtt_call_stats.get_delayed_api_stats(time_window=interval)
-        dropped_stats = self._manager.mqtt_call_stats.get_dropped_api_stats(time_window=interval)
-        self._state_attrs.update(
-            {
-                ATTR_API_CALLS_PER_SECOND: round(call_stats.global_stats.total_calls/HA_SENSOR_POLL_INTERVAL_SECONDS, 4),
-                ATTR_DELAYED_API_CALLS_PER_SECOND: round(delayed_stats.global_stats.total_calls/HA_SENSOR_POLL_INTERVAL_SECONDS, 4),
-                ATTR_DROPPED_API_CALLS_PER_SECOND: round(dropped_stats.global_stats.total_calls/HA_SENSOR_POLL_INTERVAL_SECONDS, 4),
-            }
-        )
+        return "API/s"
 
 
-class GenericSensorWrapper(SensorEntity):
+class GenericSensorWrapper(Entity):
     """Wrapper class to adapt the Meross MSS100 sensor hardware into the Homeassistant platform"""
 
     def __init__(self,
                  sensor_class: str,
                  measurement_unit: str,
                  device_method_or_property: str,
-                 state_class: str,
                  device: BaseDevice,
                  channel: int = 0):
         # Make sure the given device supports exposes the device_method_or_property passed as arg
@@ -135,14 +100,11 @@ class GenericSensorWrapper(SensorEntity):
         self._sensor_class = sensor_class
         self._device_method_or_property = device_method_or_property
         self._measurement_unit = measurement_unit
-        self._state_class = state_class
 
+        # Each Meross Device might expose m_sensor_async_updateore than 1 sensor. In this case, we cannot rely only on the
+        # uuid value to uniquely identify a sensor wrapper.
         self._id = calculate_sensor_id(uuid=device.internal_id, type=sensor_class, measurement_unit=measurement_unit, channel=channel)
         self._entity_name = "{} ({}) - {} ({}, {})".format(device.name, device.type, f"{sensor_class} sensor", measurement_unit, channel)
-
-    @property
-    def state_class(self) -> str:
-        return self._state_class
 
     # region Device wrapper common methods
     async def async_update(self):
@@ -248,7 +210,6 @@ class Ms100TemperatureSensorWrapper(GenericSensorWrapper):
         super().__init__(sensor_class=DEVICE_CLASS_TEMPERATURE,
                          measurement_unit=TEMP_CELSIUS,
                          device_method_or_property='last_sampled_temperature',
-                         state_class=STATE_CLASS_MEASUREMENT,
                          device=device,
                          channel=channel)
 
@@ -264,7 +225,6 @@ class Ms100HumiditySensorWrapper(GenericSensorWrapper):
         super().__init__(sensor_class=DEVICE_CLASS_HUMIDITY,
                          measurement_unit=PERCENTAGE,
                          device_method_or_property='last_sampled_humidity',
-                         state_class=STATE_CLASS_MEASUREMENT,
                          device=device,
                          channel=channel)
 
@@ -280,7 +240,6 @@ class Mts100TemperatureSensorWrapper(GenericSensorWrapper):
         super().__init__(sensor_class=DEVICE_CLASS_TEMPERATURE,
                          measurement_unit=TEMP_CELSIUS,
                          device_method_or_property='last_sampled_temperature',
-                         state_class=STATE_CLASS_MEASUREMENT,
                          device=device)
 
     async def async_update(self):
@@ -290,13 +249,13 @@ class Mts100TemperatureSensorWrapper(GenericSensorWrapper):
                 last_sampled_temp = self._device.last_sampled_temperature
                 last_sampled_time = self._device.last_sampled_time
                 now = datetime.utcnow()
-                if last_sampled_temp is None or last_sampled_time is None or (now - self._device.last_sampled_time).total_seconds() > SENSOR_SAMPLE_CACHE_INTERVAL_SECONDS:
+                if last_sampled_temp is None or last_sampled_time is None or (now - self._device.last_sampled_time).total_seconds() > SENSOR_POLL_INTERVAL_SECONDS:
                     # Force device refresh
                     _LOGGER.info(f"Refreshing instant metrics for device {self.name}")
                     await self._device.async_get_temperature()
                 else:
                     # Use the cached value
-                    _LOGGER.debug(f"Skipping data refresh for {self.name} as its value is recent enough")
+                    _LOGGER.info(f"Skipping data refresh for {self.name} as its value is recent enough")
 
             except CommandTimeoutError as e:
                 log_exception(logger=_LOGGER, device=self._device)
@@ -313,7 +272,6 @@ class PowerSensorWrapper(GenericSensorWrapper):
         super().__init__(sensor_class=DEVICE_CLASS_POWER,
                          measurement_unit=POWER_WATT,
                          device_method_or_property='get_last_sample',
-                         state_class=STATE_CLASS_MEASUREMENT,
                          device=device,
                          channel=channel)
 
@@ -330,7 +288,7 @@ class PowerSensorWrapper(GenericSensorWrapper):
                     await self._device.async_get_instant_metrics(channel=self._channel_id)
                 else:
                     # Use the cached value
-                    _LOGGER.debug(f"Skipping data refresh for {self.name} as its value is recent enough")
+                    _LOGGER.info(f"Skipping data refresh for {self.name} as its value is recent enough")
 
             except CommandTimeoutError as e:
                 log_exception(logger=_LOGGER, device=self._device)
@@ -348,7 +306,6 @@ class CurrentSensorWrapper(GenericSensorWrapper):
         super().__init__(sensor_class=DEVICE_CLASS_POWER,
                          measurement_unit="A",
                          device_method_or_property='get_last_sample',
-                         state_class=STATE_CLASS_MEASUREMENT,
                          device=device,
                          channel=channel)
 
@@ -365,7 +322,7 @@ class CurrentSensorWrapper(GenericSensorWrapper):
                     await self._device.async_get_instant_metrics(channel=self._channel_id)
                 else:
                     # Use the cached value
-                    _LOGGER.debug(f"Skipping data refresh for {self.name} as its value is recent enough")
+                    _LOGGER.info(f"Skipping data refresh for {self.name} as its value is recent enough")
 
             except CommandTimeoutError as e:
                 log_exception(logger=_LOGGER, device=self._device)
@@ -384,7 +341,6 @@ class VoltageSensorWrapper(GenericSensorWrapper):
         super().__init__(sensor_class=DEVICE_CLASS_POWER,
                          measurement_unit="V",
                          device_method_or_property='get_last_sample',
-                         state_class=STATE_CLASS_MEASUREMENT,
                          device=device,
                          channel=channel)
 
@@ -401,7 +357,7 @@ class VoltageSensorWrapper(GenericSensorWrapper):
                     await self._device.async_get_instant_metrics(channel=self._channel_id)
                 else:
                     # Use the cached value
-                    _LOGGER.debug(f"Skipping data refresh for {self.name} as its value is recent enough")
+                    _LOGGER.info(f"Skipping data refresh for {self.name} as its value is recent enough")
 
             except CommandTimeoutError as e:
                 log_exception(logger=_LOGGER, device=self._device)
@@ -460,10 +416,6 @@ async def _add_entities(hass, devices: Iterable[BaseDevice], async_add_entities)
             _add_and_register_sensor(hass, clazz=VoltageSensorWrapper, args={"device": d, "channel": channel_index},
                                      entities=new_entities)
 
-    # Add Meross API rate limiter sensor
-    manager = hass.data[PLATFORM][MANAGER]
-    _add_and_register_sensor(hass, clazz=ManagerMonitoringSensor, args={"manager": manager}, entities=new_entities)
-
     async_add_entities(new_entities, True)
 
 
@@ -472,6 +424,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
     devices = manager.find_devices()
     await _add_entities(hass=hass, devices=devices, async_add_entities=async_add_entities)
+
+    async_add_entities((ApiMonitoringSensor(limiter=manager.limiter),), True)
 
     # Register a listener for the Bind push notification so that we can add new entities at runtime
     async def platform_async_add_entities(push_notification: GenericPushNotification, target_devices: List[BaseDevice]):
