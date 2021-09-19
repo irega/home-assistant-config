@@ -30,6 +30,10 @@ homeassistant:
     #   friendly_name: Luz cómoda
     switch.plug_158d000310c4a0:
       friendly_name: Luz mesilla Iván
+    switch.shelly1_40f5202e07d9:
+      friendly_name: Luz Dormitorio
+    switch.shelly1_40f5202d3117:
+      friendly_name: Luz Despacho
 
 automation:
   - id: "1578412911487"
@@ -61,32 +65,3 @@ automation:
       - data:
           entity_id: light.gateway_light_04cf8cf312cd
         service: light.turn_off
-  # - id: encender_luz_despacho_movimiento
-  #   alias: Encender luz despacho cuando hay movimiento
-  #   description: ""
-  #   trigger:
-  #     - entity_id: binary_sensor.motion_sensor_158d0003d1288c
-  #       from: "off"
-  #       platform: state
-  #       to: "on"
-  #   condition:
-  #     - condition: state
-  #       entity_id: sun.sun
-  #       state: below_horizon
-  #   action:
-  #     - data:
-  #         entity_id: light.luz_despacho
-  #       service: light.turn_on
-  # - id: apagar_luz_despacho_movimiento
-  #   alias: Apagar luz despacho cuando no hay movimiento
-  #   description: ""
-  #   trigger:
-  #     - entity_id: binary_sensor.motion_sensor_158d0003d1288c
-  #       from: "on"
-  #       platform: state
-  #       to: "off"
-  #   condition: []
-  #   action:
-  #     - data:
-  #         entity_id: light.luz_despacho
-  #       service: light.turn_off

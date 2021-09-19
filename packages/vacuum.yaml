@@ -3,10 +3,10 @@
 #     host: !secret vacuum_ip
 #     token: !secret vacuum_token
 
-# homeassistant:
-#   customize:
-#     vacuum.xiaomi_vacuum_cleaner:
-#       friendly_name: Aspirador
+homeassistant:
+  customize:
+    vacuum.robot_aspirador:
+      friendly_name: Aspirador
 #     sensor.vacuum_status:
 #       friendly_name: Estado aspirador
 #     sensor.vacuum_do_not_disturb:

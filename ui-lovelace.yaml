@@ -302,7 +302,7 @@ views:
     title: Baño
   - badges:  []
     cards:
-      - entity: switch.shelly_shsw_1_40f5202d3117
+      - entity: switch.shelly1_40f5202d3117
         hold_action:
           action: more-info
         name: Luz Despacho
@@ -324,7 +324,7 @@ views:
     title: Despacho
   - badges: []
     cards:
-      - entity: switch.shelly_shsw_1_40f5202e07d9
+      - entity: switch.shelly1_40f5202e07d9
         hold_action:
           action: more-info
         name: Luz Dormitorio
