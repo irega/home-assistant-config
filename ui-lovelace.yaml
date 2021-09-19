@@ -41,7 +41,7 @@ views:
         type: media-control
       - cards:
           - elements:
-              - entity: vacuum.xiaomi_vacuum_cleaner
+              - entity: vacuum.robot_aspirador
                 hold_action:
                   action: more-info
                 icon: "mdi:information-outline"
@@ -54,7 +54,7 @@ views:
                   action: call-service
                   service: vacuum.locate
                   service_data:
-                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                    entity_id: vacuum.robot_aspirador
                 icon: "mdi:bell-ring"
                 style:
                   color: "#3090C7"
@@ -65,7 +65,7 @@ views:
                   action: call-service
                   service: vacuum.clean_spot
                   service_data:
-                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                    entity_id: vacuum.robot_aspirador
                 icon: "mdi:crosshairs"
                 style:
                   color: "#3090C7"
@@ -76,7 +76,7 @@ views:
                   action: call-service
                   service: vacuum.return_to_base
                   service_data:
-                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                    entity_id: vacuum.robot_aspirador
                 icon: "mdi:home"
                 style:
                   color: "#3090C7"
@@ -87,7 +87,7 @@ views:
                   action: call-service
                   service: vacuum.stop
                   service_data:
-                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                    entity_id: vacuum.robot_aspirador
                 icon: "mdi:stop"
                 style:
                   color: "#3090C7"
@@ -98,7 +98,7 @@ views:
                   action: call-service
                   service: vacuum.pause
                   service_data:
-                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                    entity_id: vacuum.robot_aspirador
                 icon: "mdi:pause"
                 style:
                   color: "#3090C7"
@@ -109,7 +109,7 @@ views:
                   action: call-service
                   service: vacuum.start
                   service_data:
-                    entity_id: vacuum.xiaomi_vacuum_cleaner
+                    entity_id: vacuum.robot_aspirador
                 icon: "mdi:play"
                 style:
                   color: "#3090C7"
@@ -144,7 +144,7 @@ views:
                   top: 10%
                   transform: "translate(0%,-50%)"
                 type: state-label
-              - entity: vacuum.xiaomi_vacuum_cleaner
+              - entity: vacuum.robot_aspirador
                 style:
                   background-color: "#cccccc"
                   border-color: "rgb(34, 154, 210)"
