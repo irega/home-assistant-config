@@ -9,14 +9,14 @@ homeassistant:
       friendly_name: Aspirador
     sensor.vacuum_status:
       friendly_name: Estado aspirador
-#     sensor.vacuum_do_not_disturb:
-#       friendly_name: No molestar aspirador
-#     sensor.vacuum_cleaning_time:
-#       friendly_name: Ultimo ciclo aspirador
-#     sensor.vacuum_cleaner_error_sensor:
-#       friendly_name: Error aspirador
-#     sensor.vacuum_cleaned_area:
-#       friendly_name: Area aspirador
+    sensor.vacuum_do_not_disturb:
+      friendly_name: No molestar aspirador
+    sensor.vacuum_cleaning_time:
+      friendly_name: Ultimo ciclo aspirador
+    sensor.vacuum_cleaner_error_sensor:
+      friendly_name: Error aspirador
+    sensor.vacuum_cleaned_area:
+      friendly_name: Area aspirador
 
 sensor:
   - platform: template
@@ -25,7 +25,7 @@ sensor:
         friendly_name: Estado
         value_template: "Estado: {{ states.vacuum.robot_aspirador.attributes.status }}"
         icon_template: >
-          {% set val =  states.vacuum.xiaomi_vacuum_cleaner.attributes.status  %}
+          {% set val =  states.vacuum.robot_aspirador.attributes.status  %}
           {% if val == 'Charging' %}
             mdi:battery-charging
           {% elif val == 'Cleaning' %}
@@ -39,234 +39,234 @@ sensor:
           {% else %}
             mdi:help-circle
           {% endif %}
-#       vacuum_fan_speed:
-#         friendly_name: Velocidad ventilador
-#         value_template: "Modo: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.fan_speed }}"
-#         icon_template: "mdi:speedometer"
-#       vacuum_battery:
-#         friendly_name: Bateria
-#         value_template: "Bateria: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_level }}"
-#         unit_of_measurement: "%"
-#         icon_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_icon }}"
-#       vacuum_cleaning_time:
-#         friendly_name: Ultimo ciclo
-#         value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaning_time }}"
-#         icon_template: "mdi:timer"
-#       vacuum_cleaned_area:
-#         friendly_name: Area ultimo ciclo
-#         unit_of_measurement: "m ²"
-#         value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaned_area }}"
-#         icon_template: "mdi:ruler"
-#       vacuum_cleanmainbrush:
-#         friendly_name: Reemplazo cepillo principal
-#         unit_of_measurement: "h"
-#         value_template: "Cepillo principal: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.main_brush_left }}"
-#         icon_template: "mdi:screwdriver"
-#       vacuum_cleansidebrush:
-#         friendly_name: Reemplazo cepillo lateral
-#         unit_of_measurement: "h"
-#         value_template: "Cepillo lateral: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.side_brush_left }}"
-#         icon_template: "mdi:screwdriver"
-#       vacuum_cleanfilter:
-#         friendly_name: Reemplazo filtro
-#         unit_of_measurement: "h"
-#         value_template: "Filtro: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.filter_left }}"
-#         icon_template: "mdi:screwdriver"
-#       vacuum_sensordirtyleft:
-#         friendly_name: Limpieza sensores
-#         unit_of_measurement: "h"
-#         value_template: "Sensores: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.sensor_dirty_left }}"
-#         icon_template: "mdi:screwdriver"
-#       vacuum_do_not_disturb:
-#         friendly_name: No molestar
-#         value_template: "{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.do_not_disturb }}"
-#         icon_template: >
-#           {% set val =  states.vacuum.xiaomi_vacuum_cleaner.attributes.do_not_disturb  %}
-#           {% if val == 'on' %}
-#             mdi:do-not-disturb
-#           {% else %}
-#             mdi:do-not-disturb-off
-#           {% endif %}
-#       vacuum_operation:
-#         friendly_name: Estado
-#         value_template: "Estado"
-#       vacuum_accessories:
-#         friendly_name: Mantenimiento
-#         value_template: "Mantenimiento"
-#       vacuum_cleaner_error_sensor:
-#         friendly_name: Error
-#         value_template: >-
-#           {% if states.vacuum.xiaomi_vacuum_cleaner.attributes.error is defined %}
-#             {{states.vacuum.xiaomi_vacuum_cleaner.attributes.error}}
-#           {% else %}
-#             No Error
-#           {% endif %}
+      vacuum_fan_speed:
+        friendly_name: Velocidad ventilador
+        value_template: "Modo: {{ states.vacuum.robot_aspirador.attributes.fan_speed }}"
+        icon_template: "mdi:speedometer"
+      vacuum_battery:
+        friendly_name: Bateria
+        value_template: "Bateria: {{ states.vacuum.robot_aspirador.attributes.battery_level }}"
+        unit_of_measurement: "%"
+        icon_template: "{{ states.vacuum.robot_aspirador.attributes.battery_icon }}"
+      vacuum_cleaning_time:
+        friendly_name: Ultimo ciclo
+        value_template: "{{ states.vacuum.robot_aspirador.attributes.cleaning_time }}"
+        icon_template: "mdi:timer"
+      vacuum_cleaned_area:
+        friendly_name: Area ultimo ciclo
+        unit_of_measurement: "m ²"
+        value_template: "{{ states.vacuum.robot_aspirador.attributes.cleaned_area }}"
+        icon_template: "mdi:ruler"
+      vacuum_cleanmainbrush:
+        friendly_name: Reemplazo cepillo principal
+        unit_of_measurement: "h"
+        value_template: "Cepillo principal: {{ states.vacuum.robot_aspirador.attributes.main_brush_left }}"
+        icon_template: "mdi:screwdriver"
+      vacuum_cleansidebrush:
+        friendly_name: Reemplazo cepillo lateral
+        unit_of_measurement: "h"
+        value_template: "Cepillo lateral: {{ states.vacuum.robot_aspirador.attributes.side_brush_left }}"
+        icon_template: "mdi:screwdriver"
+      vacuum_cleanfilter:
+        friendly_name: Reemplazo filtro
+        unit_of_measurement: "h"
+        value_template: "Filtro: {{ states.vacuum.robot_aspirador.attributes.filter_left }}"
+        icon_template: "mdi:screwdriver"
+      vacuum_sensordirtyleft:
+        friendly_name: Limpieza sensores
+        unit_of_measurement: "h"
+        value_template: "Sensores: {{ states.vacuum.robot_aspirador.attributes.sensor_dirty_left }}"
+        icon_template: "mdi:screwdriver"
+      vacuum_do_not_disturb:
+        friendly_name: No molestar
+        value_template: "{{ states.vacuum.robot_aspirador.attributes.do_not_disturb }}"
+        icon_template: >
+          {% set val =  states.vacuum.robot_aspirador.attributes.do_not_disturb  %}
+          {% if val == 'on' %}
+            mdi:do-not-disturb
+          {% else %}
+            mdi:do-not-disturb-off
+          {% endif %}
+      vacuum_operation:
+        friendly_name: Estado
+        value_template: "Estado"
+      vacuum_accessories:
+        friendly_name: Mantenimiento
+        value_template: "Mantenimiento"
+      vacuum_cleaner_error_sensor:
+        friendly_name: Error
+        value_template: >-
+          {% if states.vacuum.robot_aspirador.attributes.error is defined %}
+            {{states.vacuum.robot_aspirador.attributes.error}}
+          {% else %}
+            No Error
+          {% endif %}
 
-# automation:
-#   - id: ASPIRADORA Notificar ERROR
-#     alias: Notificar error aspirador
-#     trigger:
-#       - entity_id: sensor.vacuum_cleaner_status_sensor
-#         platform: state
-#         to: Error
-#       - entity_id: sensor.vacuum_cleaner_status_sensor
-#         platform: state
-#         to: In Error
-#       - entity_id: sensor.vacuum_cleaner_status_sensor
-#         platform: state
-#         to: Charging Error
-#     action:
-#       - data:
-#           message:
-#             "{% if is_state('sensor.vacuum_cleaner_error_sensor', 'No Error') \
-#             \ %}\n  {{states.sensor.vacuum_status.state}}\n{% else %}\n  {{states.sensor.vacuum_cleaner_error_sensor.state}}\n\
-#             {% endif %}"
-#           title: "*Aspiradora ERROR*"
-#         service: notify.telegram
-#   - id: ASPIRADORA Notificar PROBLEMA RESUELTO
-#     alias: Notificar problema resuelto aspirador
-#     trigger:
-#       - entity_id: sensor.vacuum_cleaner_error_sensor
-#         platform: state
-#         to: No Error
-#     action:
-#       - data:
-#           message: Problema resuelto.
-#           title: "*Aspiradora*"
-#         service: notify.telegram
-#   - id: ASPIRADORA Notificar COMIENZO LIMPIEZA
-#     alias: Notificar comienzo limpieza aspirador
-#     trigger:
-#       - entity_id: vacuum.xiaomi_vacuum_cleaner
-#         platform: state
-#         to: cleaning
-#     action:
-#       - data:
-#           message: Iniciando la limpieza.
-#           title: "*Aspiradora*"
-#         service: notify.telegram
-#   - id: ASPIRADORA Notificar LIMPIEZA FINALIZADA
-#     alias: Notificar limpieza finalizada aspirador
-#     trigger:
-#       - entity_id: vacuum.xiaomi_vacuum_cleaner
-#         platform: state
-#         to: returning
-#     action:
-#       - data:
-#           message: Volviendo a la base de carga.
-#           title: "*Aspiradora*"
-#         service: notify.telegram
-#   - id: ASPIRADORA Notificar CARGANDO
-#     alias: Notificar estado cargando aspirador
-#     trigger:
-#       - entity_id: vacuum.xiaomi_vacuum_cleaner
-#         platform: state
-#         to: docked
-#     action:
-#       - data:
-#           message: En la base de carga y cargando.
-#           title: "*Aspiradora*"
-#         service: notify.telegram
-#   - id: ASPIRADORA Limpiar casa
-#     alias: Limpiar casa
-#     description: ""
-#     trigger:
-#       - at: "19:00"
-#         platform: time
-#     condition:
-#       - condition: time
-#         weekday:
-#           - mon
-#           - tue
-#           - wed
-#           - thu
-#           - fri
-#           - sat
-#           - sun
-#     action:
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#         service: vacuum.start
+automation:
+  - id: ASPIRADORA Notificar ERROR
+    alias: Notificar error aspirador
+    trigger:
+      - entity_id: sensor.vacuum_cleaner_status_sensor
+        platform: state
+        to: Error
+      - entity_id: sensor.vacuum_cleaner_status_sensor
+        platform: state
+        to: In Error
+      - entity_id: sensor.vacuum_cleaner_status_sensor
+        platform: state
+        to: Charging Error
+    action:
+      - data:
+          message:
+            "{% if is_state('sensor.vacuum_cleaner_error_sensor', 'No Error') \
+            \ %}\n  {{states.sensor.vacuum_status.state}}\n{% else %}\n  {{states.sensor.vacuum_cleaner_error_sensor.state}}\n\
+            {% endif %}"
+          title: "*Aspiradora ERROR*"
+        service: notify.telegram
+  - id: ASPIRADORA Notificar PROBLEMA RESUELTO
+    alias: Notificar problema resuelto aspirador
+    trigger:
+      - entity_id: sensor.vacuum_cleaner_error_sensor
+        platform: state
+        to: No Error
+    action:
+      - data:
+          message: Problema resuelto.
+          title: "*Aspiradora*"
+        service: notify.telegram
+  - id: ASPIRADORA Notificar COMIENZO LIMPIEZA
+    alias: Notificar comienzo limpieza aspirador
+    trigger:
+      - entity_id: vacuum.robot_aspirador
+        platform: state
+        to: cleaning
+    action:
+      - data:
+          message: Iniciando la limpieza.
+          title: "*Aspiradora*"
+        service: notify.telegram
+  - id: ASPIRADORA Notificar LIMPIEZA FINALIZADA
+    alias: Notificar limpieza finalizada aspirador
+    trigger:
+      - entity_id: vacuum.robot_aspirador
+        platform: state
+        to: returning
+    action:
+      - data:
+          message: Volviendo a la base de carga.
+          title: "*Aspiradora*"
+        service: notify.telegram
+  - id: ASPIRADORA Notificar CARGANDO
+    alias: Notificar estado cargando aspirador
+    trigger:
+      - entity_id: vacuum.robot_aspirador
+        platform: state
+        to: docked
+    action:
+      - data:
+          message: En la base de carga y cargando.
+          title: "*Aspiradora*"
+        service: notify.telegram
+  - id: ASPIRADORA Limpiar casa
+    alias: Limpiar casa
+    description: ""
+    trigger:
+      - at: "19:00"
+        platform: time
+    condition:
+      - condition: time
+        weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+          - sat
+          - sun
+    action:
+      - data:
+          entity_id: vacuum.robot_aspirador
+        service: vacuum.start
 
-# script:
-#   vacuum_cocina:
-#     alias: Limpiar cocina
-#     sequence:
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#           repeats: "1"
-#           zone: [[16166, 28042, 18516, 33192]]
-#         service: xiaomi_miio.vacuum_clean_zone
-#   vacuum_dormitorio:
-#     alias: Limpiar dormitorio
-#     sequence:
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#           repeats: "1"
-#           zone: [[23704, 28691, 27204, 32191]]
-#         service: xiaomi_miio.vacuum_clean_zone
-#   vacuum_despacho:
-#     alias: Limpiar despacho
-#     sequence:
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#           repeats: "1"
-#           zone: [[21620, 29744, 23770, 33344]]
-#         service: xiaomi_miio.vacuum_clean_zone
-#   vacuum_vestidor:
-#     alias: Limpiar vestidor
-#     sequence:
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#           repeats: "1"
-#           zone: [[18558, 29676, 20708, 33276]]
-#         service: xiaomi_miio.vacuum_clean_zone
-#   vacuum_entrada:
-#     alias: Limpiar entrada
-#     sequence:
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#           repeats: "1"
-#           zone: [[19765, 26334, 21365, 28734]]
-#         service: xiaomi_miio.vacuum_clean_zone
-#   vacuum_pasillo:
-#     alias: Limpiar pasillo
-#     sequence:
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#           repeats: "1"
-#           zone: [[18630, 28678, 24380, 29728]]
-#         service: xiaomi_miio.vacuum_clean_zone
-#   vacuum_salon:
-#     alias: Limpiar salón
-#     sequence:
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#           repeats: "1"
-#           zone: [[21328, 25057, 26878, 28657]]
-#         service: xiaomi_miio.vacuum_clean_zone
-#   vacuum_banio:
-#     alias: Limpiar banio
-#     sequence:
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#           repeats: "1"
-#           zone: [[17174, 26264, 19774, 28064]]
-#         service: xiaomi_miio.vacuum_clean_zone
-#   vacuum_limpiar_casa:
-#     alias: Limpiar casa
-#     sequence:
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#         service: vacuum.start
-#   vacuum_parar_limpieza:
-#     alias: Parar limpieza
-#     sequence:
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#         service: vacuum.stop
-#       - delay:
-#           seconds: 1
-#       - data:
-#           entity_id: vacuum.xiaomi_vacuum_cleaner
-#         service: vacuum.return_to_base
+script:
+  vacuum_cocina:
+    alias: Limpiar cocina
+    sequence:
+      - data:
+          entity_id: vacuum.robot_aspirador
+          repeats: "1"
+          zone: [[16166, 28042, 18516, 33192]]
+        service: xiaomi_miio.vacuum_clean_zone
+  vacuum_dormitorio:
+    alias: Limpiar dormitorio
+    sequence:
+      - data:
+          entity_id: vacuum.robot_aspirador
+          repeats: "1"
+          zone: [[23704, 28691, 27204, 32191]]
+        service: xiaomi_miio.vacuum_clean_zone
+  vacuum_despacho:
+    alias: Limpiar despacho
+    sequence:
+      - data:
+          entity_id: vacuum.robot_aspirador
+          repeats: "1"
+          zone: [[21620, 29744, 23770, 33344]]
+        service: xiaomi_miio.vacuum_clean_zone
+  vacuum_vestidor:
+    alias: Limpiar vestidor
+    sequence:
+      - data:
+          entity_id: vacuum.robot_aspirador
+          repeats: "1"
+          zone: [[18558, 29676, 20708, 33276]]
+        service: xiaomi_miio.vacuum_clean_zone
+  vacuum_entrada:
+    alias: Limpiar entrada
+    sequence:
+      - data:
+          entity_id: vacuum.robot_aspirador
+          repeats: "1"
+          zone: [[19765, 26334, 21365, 28734]]
+        service: xiaomi_miio.vacuum_clean_zone
+  vacuum_pasillo:
+    alias: Limpiar pasillo
+    sequence:
+      - data:
+          entity_id: vacuum.robot_aspirador
+          repeats: "1"
+          zone: [[18630, 28678, 24380, 29728]]
+        service: xiaomi_miio.vacuum_clean_zone
+  vacuum_salon:
+    alias: Limpiar salón
+    sequence:
+      - data:
+          entity_id: vacuum.robot_aspirador
+          repeats: "1"
+          zone: [[21328, 25057, 26878, 28657]]
+        service: xiaomi_miio.vacuum_clean_zone
+  vacuum_banio:
+    alias: Limpiar banio
+    sequence:
+      - data:
+          entity_id: vacuum.robot_aspirador
+          repeats: "1"
+          zone: [[17174, 26264, 19774, 28064]]
+        service: xiaomi_miio.vacuum_clean_zone
+  vacuum_limpiar_casa:
+    alias: Limpiar casa
+    sequence:
+      - data:
+          entity_id: vacuum.robot_aspirador
+        service: vacuum.start
+  vacuum_parar_limpieza:
+    alias: Parar limpieza
+    sequence:
+      - data:
+          entity_id: vacuum.robot_aspirador
+        service: vacuum.stop
+      - delay:
+          seconds: 1
+      - data:
+          entity_id: vacuum.robot_aspirador
+        service: vacuum.return_to_base
