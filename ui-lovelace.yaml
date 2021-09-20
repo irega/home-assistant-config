@@ -28,7 +28,7 @@ views:
     cards:
       - entity: climate.netatmo_smart_thermostat
         type: thermostat
-      - entity: switch.shelly_shplg_s_26722d
+      - entity: switch.shellyplug_s_26722d
         hold_action:
           action: more-info
         name: Luz auxiliar
@@ -289,14 +289,14 @@ views:
   - badges: []
     cards:
       - entities:
-          - entity: light.luz_espejo_bano_1
-          - entity: light.luz_espejo_bano_2
+          - entity: light.luz_bano_1
+          - entity: light.luz_bano_2
         show_header_toggle: true
         title: Luz espejo Baño
         type: entities
-      - entity: light.luz_espejo_bano_1
+      - entity: light.luz_bano_1
         type: light
-      - entity: light.luz_espejo_bano_2
+      - entity: light.luz_bano_2
         type: light
     path: bano
     title: Baño
@@ -374,8 +374,6 @@ views:
       - entities:
           - entity: automation.apagar_luz_entrada_cuando_no_hay_movimiento
           - entity: automation.encender_luz_entrada_cuando_hay_movimiento
-          # - entity: automation.apagar_luz_despacho_cuando_no_hay_movimiento
-          # - entity: automation.encender_luz_despacho_cuando_hay_movimiento
           - entity: automation.limpiar_casa
           - entity: automation.notificar_comienzo_limpieza_aspirador
           - entity: automation.notificar_error_aspirador
@@ -383,10 +381,7 @@ views:
           - entity: automation.notificar_limpieza_finalizada_aspirador
           - entity: automation.notificar_problema_resuelto_aspirador
           - entity: automation.reproducir_sonido_al_abrir_puerta_entrada
-          # - entity: automation.toggle_luz_despacho
           - entity: automation.notificar_error_backup
-          # - entity: automation.activar_modo_cama_cuando_se_agita_cubo
-          # - entity: automation.activar_modo_noche_cuando_se_golpea_cubo
         show_header_toggle: true
         title: Automatizaciones
         type: entities
@@ -401,8 +396,6 @@ views:
           - entity: script.vacuum_vestidor
           - entity: script.vacuum_dormitorio
           - entity: script.vacuum_salon
-          # - entity: script.activar_modo_cama
-          # - entity: script.activar_modo_noche
         show_header_toggle: false
         title: Scripts
         type: entities

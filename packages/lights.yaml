@@ -1,19 +1,9 @@
-# light:
-#   - platform: xiaomi_miio
-#     name: Luz espejo Baño 1
-#     host: !secret luz_espejo_bano_1_ip
-#     token: !secret luz_espejo_bano_1_token
-#     model: philips.light.bulb
-#   - platform: xiaomi_miio
-#     name: Luz espejo Baño 2
-#     host: !secret luz_espejo_bano_2_ip
-#     token: !secret luz_espejo_bano_2_token
-#     model: philips.light.bulb
-#   - platform: group
-#     name: Luz espejo Baño
-#     entities:
-#       - light.luz_espejo_bano_1
-#       - light.luz_espejo_bano_2
+light:
+  - platform: group
+    name: Luz espejo Baño
+    entities:
+      - light.luz_bano_1
+      - light.luz_bano_2
 
 discovery:
   ignore:
@@ -26,8 +16,6 @@ yeelight:
 
 homeassistant:
   customize:
-    # switch.shelly_shplg_s_26722d:
-    #   friendly_name: Luz cómoda
     switch.plug_158d000310c4a0:
       friendly_name: Luz mesilla Iván
     switch.shelly1_40f5202e07d9:
