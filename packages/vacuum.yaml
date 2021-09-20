@@ -21,6 +21,10 @@ homeassistant:
 sensor:
   - platform: template
     sensors:
+      vacuum_cleaner_status_sensor:
+        friendly_name: Vacuum Cleaner Status Sensor
+        value_template: >-
+          {{ states.vacuum.robot_aspirador.attributes.status }}
       vacuum_status:
         friendly_name: Estado
         value_template: "Estado: {{ states.vacuum.robot_aspirador.attributes.status }}"
