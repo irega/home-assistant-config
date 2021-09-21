@@ -14,12 +14,12 @@ automation:
     alias: Notificar error backup
     trigger:
       - platform: state
-        entity_id: binary_sensor.snapshots_stale
-        from: "False"
-        to: "True"
+        entity_id: binary_sensor.backups_stale
+        from: 'off'
+        to: 'on'
     condition: []
     action:
       - data:
-          title: "Snapshots are Stale"
-          message: "Please visit the 'Hass.io Google Drive Backup' add-on status page for details."
+          title: "Backups are Stale"
+          message: "Please visit the 'Home Assistant Google Drive Backup' add-on status page for details."
         service: notify.telegram

@@ -401,13 +401,13 @@ views:
         type: entities
       - type: conditional
         conditions:
-          - entity: binary_sensor.snapshots_stale
+          - entity: binary_sensor.backups_stale
             state_not: "off"
         card:
           type: markdown
           content: >-
-            Snapshots are stale! Please visit the "Hass.io Google Drive Backup" add-on
+            Backups are stale! Please visit the "Home Assistant Google Drive Backup" add-on
             status page for details.
-          title: Stale Snapshots!
+          title: Stale Backups!
     path: general
     title: General
