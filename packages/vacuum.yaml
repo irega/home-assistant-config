@@ -16,10 +16,6 @@ homeassistant:
 sensor:
   - platform: template
     sensors:
-      vacuum_cleaner_status_sensor:
-        friendly_name: Vacuum Cleaner Status Sensor
-        value_template: >-
-          {{ states.vacuum.robot_aspirador.attributes.status }}
       vacuum_status:
         friendly_name: Estado
         value_template: "Estado: {{ states.vacuum.robot_aspirador.attributes.status }}"
@@ -105,15 +101,15 @@ automation:
   - id: ASPIRADORA Notificar ERROR
     alias: Notificar error aspirador
     trigger:
-      - entity_id: sensor.vacuum_cleaner_status_sensor
+      - entity_id: sensor.vacuum_status
         platform: state
-        to: Error
-      - entity_id: sensor.vacuum_cleaner_status_sensor
+        to: "Estado: Error"
+      - entity_id: sensor.vacuum_status
         platform: state
-        to: In Error
-      - entity_id: sensor.vacuum_cleaner_status_sensor
+        to: "Estado: Device offline"
+      - entity_id: sensor.vacuum_status
         platform: state
-        to: Charging Error
+        to: "Estado: Charging problem"
     action:
       - data:
           message:
