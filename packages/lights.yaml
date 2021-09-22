@@ -22,6 +22,8 @@ homeassistant:
       friendly_name: Luz Dormitorio
     switch.shelly1_40f5202d3117:
       friendly_name: Luz Despacho
+    switch.shellyplug_s_26722d:
+      friendly_name: Luz auxiliar
 
 automation:
   - id: "1578412911487"
