@@ -37,7 +37,7 @@ views:
         tap_action:
           action: toggle
         type: entity-button
-      - entity: media_player.tv_salon
+      - entity: media_player.samsung_7_series_43
         type: media-control
       - cards:
           - elements:
@@ -282,7 +282,7 @@ views:
     title: Salón
   - badges: []
     cards:
-      - entity: media_player.tv_cocina
+      - entity: media_player.samsung_4_series_24
         type: media-control
     path: cocina
     title: Cocina
@@ -300,7 +300,7 @@ views:
         type: light
     path: bano
     title: Baño
-  - badges:  []
+  - badges: []
     cards:
       - entity: switch.shelly1_40f5202d3117
         hold_action:

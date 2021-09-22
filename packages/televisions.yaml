@@ -1,20 +1,6 @@
-samsungtv:
-  - host: !secret tv_salon_ip
-    name: TV Salon
-    turn_on_action:
-      - service: wake_on_lan.send_magic_packet
-        data:
-          mac: !secret tv_salon_mac
-  - host: !secret tv_cocina_ip
-    name: TV Cocina
-    turn_on_action:
-      - service: wake_on_lan.send_magic_packet
-        data:
-          mac: !secret tv_cocina_mac
-
 homeassistant:
   customize:
-    media_player.tv_salon:
+    media_player.samsung_7_series_43:
       friendly_name: TV salón
-    media_player.tv_cocina:
+    media_player.samsung_4_series_24:
       friendly_name: TV cocina
