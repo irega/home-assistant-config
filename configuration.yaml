@@ -30,4 +30,4 @@ alexa:
 tts:
   - platform: google_translate
 
-# alarm_control_panel: !include resources/bwalarm/bwalarm.yaml
+alarm_control_panel: !include resources/bwalarm/bwalarm.yaml
