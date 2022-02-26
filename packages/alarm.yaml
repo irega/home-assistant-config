@@ -89,48 +89,48 @@ automation:
   ################# S I R E N A ######################
   ####################################################
   script:
-  security_alarm_loop_1:
-    sequence:
-    - service: script.turn_off
-      target:
-        entity_id:
-          - script.security_countdown_loop_1
-          - script.security_countdown_loop_2
-    - service: xiaomi_aqara.play_ringtone
-      data:
-        gw_mac: !secret aqara_gateway_mac
-        ringtone_id: 2 
-        ringtone_vol: 10
-    - service: script.turn_off
-      entity_id: script.security_alarm_loop_2
-    - delay: "00:00:6"
-    - service: script.turn_on
-      entity_id: script.security_alarm_loop_2
-  security_alarm_loop_2:
-    sequence:
-    - service: script.turn_off
-      target:
-        entity_id:
-          - script.security_countdown_loop_1
-          - script.security_countdown_loop_2
-    - service: xiaomi_aqara.play_ringtone
-      data:
-        gw_mac: !secret aqara_gateway_mac
-        ringtone_id: 1 
-        ringtone_vol: 10
-    - service: script.turn_off
-      entity_id: script.security_alarm_loop_1
-    - delay: "00:00:10"
-    - service: script.turn_on
-      entity_id: script.security_alarm_loop_1
-  security_stop_loop_sounds:
-    alias: Stop Security Sound Scripts on Gateway
-    sequence:
-    - service: script.turn_off
-      target:
-        entity_id:
-          - script.security_alarm_loop_1
-          - script.security_alarm_loop_2
-    - service: xiaomi_aqara.stop_ringtone
-      data:
-        gw_mac: !secret aqara_gateway_mac
+    security_alarm_loop_1:
+      sequence:
+      - service: script.turn_off
+        target:
+          entity_id:
+            - script.security_countdown_loop_1
+            - script.security_countdown_loop_2
+      - service: xiaomi_aqara.play_ringtone
+        data:
+          gw_mac: !secret aqara_gateway_mac
+          ringtone_id: 2 
+          ringtone_vol: 10
+      - service: script.turn_off
+        entity_id: script.security_alarm_loop_2
+      - delay: "00:00:6"
+      - service: script.turn_on
+        entity_id: script.security_alarm_loop_2
+    security_alarm_loop_2:
+      sequence:
+      - service: script.turn_off
+        target:
+          entity_id:
+            - script.security_countdown_loop_1
+            - script.security_countdown_loop_2
+      - service: xiaomi_aqara.play_ringtone
+        data:
+          gw_mac: !secret aqara_gateway_mac
+          ringtone_id: 1 
+          ringtone_vol: 10
+      - service: script.turn_off
+        entity_id: script.security_alarm_loop_1
+      - delay: "00:00:10"
+      - service: script.turn_on
+        entity_id: script.security_alarm_loop_1
+    security_stop_loop_sounds:
+      alias: Stop Security Sound Scripts on Gateway
+      sequence:
+      - service: script.turn_off
+        target:
+          entity_id:
+            - script.security_alarm_loop_1
+            - script.security_alarm_loop_2
+      - service: xiaomi_aqara.stop_ringtone
+        data:
+          gw_mac: !secret aqara_gateway_mac
