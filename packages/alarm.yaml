@@ -61,12 +61,7 @@ automation:
       - service: notify.telegram
         data:
           message: "Alarma *desactivada*"
-      - service: automation.turn_off
-        entity_id: automation.sirena1
-      - service: automation.turn_off
-        entity_id: automation.sirena2
-      - service: automation.turn_off
-        entity_id: automation.sirena3
+      - service: script.security_stop_loop_sounds
 
   - id: alarm_triggered
     alias: "[Alarm] Triggered"
@@ -75,8 +70,7 @@ automation:
         entity_id: alarm_control_panel.house
         to: "triggered"
     action:
-      - service: automation.turn_on
-        entity_id: automation.sirena1
+      - service: script.security_alarm_loop_1
       - service: notify.telegram
         data:
           message: 'HA SALTADO LA ALARMA!!! {{ states[states.alarm_control_panel.house.attributes.changed_by.split(".")[0]][ states.alarm_control_panel.house.attributes.changed_by.split(".")[1]].name }}'
@@ -94,74 +88,49 @@ automation:
   ####################################################
   ################# S I R E N A ######################
   ####################################################
-  - alias: "Sirena1"
-    initial_state: False
-    trigger:
-      - platform: state
-        entity_id: automation.sirena1
-        from: "off"
-        to: "on"
-    condition:
-      - condition: state
-        entity_id: alarm_control_panel.house
-        state: "triggered"
-    action:
-      - service: automation.turn_off
-        entity_id: automation.sirena3
-      - service: xiaomi_aqara.play_ringtone
-        data:
-          gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 2
-          ringtone_vol: 6
-      - delay:
-          seconds: 4
-      - service: automation.turn_on
-        entity_id: automation.sirena2
-
-  - alias: "Sirena2"
-    initial_state: False
-    trigger:
-      - platform: state
-        entity_id: automation.sirena2
-        from: "off"
-        to: "on"
-    condition:
-      - condition: state
-        entity_id: alarm_control_panel.house
-        state: "triggered"
-    action:
-      - service: automation.turn_off
-        entity_id: automation.sirena1
-      - service: xiaomi_aqara.play_ringtone
-        data:
-          gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 2
-          ringtone_vol: 6
-      - delay:
-          seconds: 4
-      - service: automation.turn_on
-        entity_id: automation.sirena3
-
-  - alias: "Sirena3"
-    initial_state: False
-    trigger:
-      - platform: state
-        entity_id: automation.sirena3
-        from: "off"
-        to: "on"
-    condition:
-      - condition: state
-        entity_id: alarm_control_panel.house
-        state: "triggered"
-    action:
-      - service: automation.turn_off
-        entity_id: automation.sirena2
-      - service: xiaomi_aqara.play_ringtone
-        data:
-          gw_mac: !secret aqara_gateway_mac
-          ringtone_id: 2
-          ringtone_vol: 6
-      - delay:
-          seconds: 4
-      - service: automation.turn_on
-        entity_id: automation.sirena1
+  script:
+  security_alarm_loop_1:
+    sequence:
+    - service: script.turn_off
+      target:
+        entity_id:
+          - script.security_countdown_loop_1
+          - script.security_countdown_loop_2
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 2 
+        ringtone_vol: 10
+    - service: script.turn_off
+      entity_id: script.security_alarm_loop_2
+    - delay: "00:00:6"
+    - service: script.turn_on
+      entity_id: script.security_alarm_loop_2
+  security_alarm_loop_2:
+    sequence:
+    - service: script.turn_off
+      target:
+        entity_id:
+          - script.security_countdown_loop_1
+          - script.security_countdown_loop_2
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
+        ringtone_id: 1 
+        ringtone_vol: 10
+    - service: script.turn_off
+      entity_id: script.security_alarm_loop_1
+    - delay: "00:00:10"
+    - service: script.turn_on
+      entity_id: script.security_alarm_loop_1
+  security_stop_loop_sounds:
+    alias: Stop Security Sound Scripts on Gateway
+    sequence:
+    - service: script.turn_off
+      target:
+        entity_id:
+          - script.security_alarm_loop_1
+          - script.security_alarm_loop_2
+    - service: xiaomi_aqara.stop_ringtone
+      data:
+        gw_mac: !secret aqara_gateway_mac
