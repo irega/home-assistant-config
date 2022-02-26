@@ -369,7 +369,7 @@ views:
   - badges:
       - entity: sun.sun
     cards:
-      - entity: weather.casa
+      - entity: weather.rio_segre
         type: weather-forecast
       - entities:
           - entity: automation.apagar_luz_entrada_cuando_no_hay_movimiento
