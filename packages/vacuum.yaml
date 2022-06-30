@@ -200,16 +200,16 @@ script:
           repeats: "1"
           zone: [[23704, 28691, 27204, 32191]]
         service: xiaomi_miio.vacuum_clean_zone
-  vacuum_despacho:
-    alias: Limpiar despacho
+  vacuum_habitacion_martin:
+    alias: Limpiar habitación Martín
     sequence:
       - data:
           entity_id: vacuum.robot_aspirador
           repeats: "1"
           zone: [[21620, 29744, 23770, 33344]]
         service: xiaomi_miio.vacuum_clean_zone
-  vacuum_vestidor:
-    alias: Limpiar vestidor
+  vacuum_despacho:
+    alias: Limpiar despacho
     sequence:
       - data:
           entity_id: vacuum.robot_aspirador

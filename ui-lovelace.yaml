@@ -390,10 +390,10 @@ views:
           - entity: script.vacuum_parar_limpieza
           - entity: script.vacuum_banio
           - entity: script.vacuum_cocina
-          - entity: script.vacuum_despacho
+          - entity: script.vacuum_habitacion_martin
           - entity: script.vacuum_entrada
           - entity: script.vacuum_pasillo
-          - entity: script.vacuum_vestidor
+          - entity: script.vacuum_despacho
           - entity: script.vacuum_dormitorio
           - entity: script.vacuum_salon
         show_header_toggle: false
