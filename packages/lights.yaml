@@ -11,8 +11,8 @@ discovery:
 
 yeelight:
   devices:
-    !secret luz_vestidor_ip:
-      name: Luz Vestidor
+    !secret luz_despacho_ip:
+      name: Luz Despacho
 
 homeassistant:
   customize:
@@ -21,7 +21,7 @@ homeassistant:
     switch.shelly1_40f5202e07d9:
       friendly_name: Luz Dormitorio
     switch.shelly1_40f5202d3117:
-      friendly_name: Luz Despacho
+      friendly_name: Luz Martín
     switch.shellyplug_s_26722d:
       friendly_name: Luz auxiliar
     switch.luz_mesilla_sara_mss210_main_channel:

@@ -305,23 +305,14 @@ views:
       - entity: switch.shelly1_40f5202d3117
         hold_action:
           action: more-info
-        name: Luz Despacho
+        name: Luz Martín
         show_icon: true
         show_name: true
         tap_action:
           action: toggle
         type: entity-button
-      - entity: switch.pc_ivan
-        hold_action:
-          action: more-info
-        name: PC Iván
-        show_icon: true
-        show_name: true
-        tap_action:
-          action: toggle
-        type: entity-button
-    path: despacho
-    title: Despacho
+    path: martin
+    title: Martín
   - badges: []
     cards:
       - entity: switch.shelly1_40f5202e07d9
@@ -355,17 +346,26 @@ views:
     title: Dormitorio
   - badges: []
     cards:
-      - entity: light.luz_vestidor
+      - entity: light.luz_despacho
         hold_action:
           action: more-info
-        name: Luz Vestidor
+        name: Luz Despacho
         show_icon: true
         show_name: true
         tap_action:
           action: toggle
         type: entity-button
-    path: vestidor
-    title: Vestidor
+      - entity: switch.pc_ivan
+        hold_action:
+          action: more-info
+        name: PC Iván
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
+    path: despacho
+    title: Despacho
   - badges:
       - entity: sun.sun
     cards:
