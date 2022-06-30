@@ -346,15 +346,6 @@ views:
     title: Dormitorio
   - badges: []
     cards:
-      - entity: light.luz_despacho
-        hold_action:
-          action: more-info
-        name: Luz Despacho
-        show_icon: true
-        show_name: true
-        tap_action:
-          action: toggle
-        type: entity-button
       - entity: switch.pc_ivan
         hold_action:
           action: more-info

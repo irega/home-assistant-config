@@ -5,15 +5,6 @@ light:
       - light.luz_bano_1
       - light.luz_bano_2
 
-discovery:
-  ignore:
-    - yeelight
-
-yeelight:
-  devices:
-    !secret luz_despacho_ip:
-      name: Luz Despacho
-
 homeassistant:
   customize:
     switch.plug_158d000310c4a0:
