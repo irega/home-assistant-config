@@ -17,6 +17,8 @@ homeassistant:
       friendly_name: Luz auxiliar
     switch.luz_mesilla_sara_mss210_main_channel:
       friendly_name: Luz mesilla Sara
+    light.mibedsidelamp2_4033:
+      friendly_name: Luz bebé
 
 automation:
   - id: "1578412911487"
