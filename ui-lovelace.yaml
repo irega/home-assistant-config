@@ -311,6 +311,15 @@ views:
         tap_action:
           action: toggle
         type: entity-button
+      - entity: light.mibedsidelamp2_4033
+        hold_action:
+          action: more-info
+        name: Luz bebé
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
     path: martin
     title: Martín
   - badges: []
