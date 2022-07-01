@@ -26,6 +26,20 @@ views:
       - entity: sensor.vacuum_cleaned_area
       - entity: sensor.vacuum_cleaner_error_sensor
     cards:
+      - type: entities
+        entities:
+          - fan.mi_air_purifier_3_3h
+          - switch.mi_air_purifier_3_3h_buzzer
+          - switch.mi_air_purifier_3_3h_child_lock
+          - number.mi_air_purifier_3_3h_fan_level
+          - number.mi_air_purifier_3_3h_favorite_level
+          - sensor.mi_air_purifier_3_3h_filter_life_remaining
+          - sensor.mi_air_purifier_3_3h_filter_use
+          - sensor.mi_air_purifier_3_3h_humidity
+          - select.mi_air_purifier_3_3h_led_brightness
+          - sensor.mi_air_purifier_3_3h_motor_speed
+          - sensor.mi_air_purifier_3_3h_pm2_5
+          - sensor.mi_air_purifier_3_3h_temperature
       - entity: climate.netatmo_smart_thermostat
         type: thermostat
       - entity: switch.shellyplug_s_26722d
@@ -278,6 +292,7 @@ views:
             title: Aspirador
             type: picture-elements
         type: "custom:vertical-stack-in-card"
+        
     path: default_view
     title: Salón
   - badges: []
