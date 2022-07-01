@@ -28,18 +28,18 @@ views:
     cards:
       - type: entities
         entities:
-          - fan.mi_air_purifier_3_3h
-          - switch.mi_air_purifier_3_3h_buzzer
-          - switch.mi_air_purifier_3_3h_child_lock
-          - number.mi_air_purifier_3_3h_fan_level
-          - number.mi_air_purifier_3_3h_favorite_level
-          - sensor.mi_air_purifier_3_3h_filter_life_remaining
-          - sensor.mi_air_purifier_3_3h_filter_use
-          - sensor.mi_air_purifier_3_3h_humidity
-          - select.mi_air_purifier_3_3h_led_brightness
-          - sensor.mi_air_purifier_3_3h_motor_speed
-          - sensor.mi_air_purifier_3_3h_pm2_5
-          - sensor.mi_air_purifier_3_3h_temperature
+          - fan.purificador_aire
+          - switch.purificador_aire_buzzer
+          - switch.purificador_aire_child_lock
+          - number.purificador_aire_fan_level
+          - number.purificador_aire_favorite_level
+          - sensor.purificador_aire_filter_life_remaining
+          - sensor.purificador_aire_filter_use
+          - sensor.purificador_aire_humidity
+          - select.purificador_aire_led_brightness
+          - sensor.purificador_aire_motor_speed
+          - sensor.purificador_aire_pm2_5
+          - sensor.purificador_aire_temperature
       - entity: climate.netatmo_smart_thermostat
         type: thermostat
       - entity: switch.shellyplug_s_26722d
