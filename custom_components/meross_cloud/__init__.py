@@ -9,6 +9,7 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
+from homeassistant.core import callback
 from homeassistant.exceptions import ConfigEntryNotReady, ConfigEntryAuthFailed
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.typing import HomeAssistantType
@@ -45,13 +46,21 @@ from .common import (
     log_exception,
     CONF_STORED_CREDS,
     LIMITER,
+    CONF_OPT_ENABLE_RATE_LIMITS,
+    CONF_OPT_ENABLE_RATE_LIMITS,
+    CONF_OPT_GLOBAL_RATE_LIMIT_MAX_TOKENS,
+    CONF_OPT_GLOBAL_RATE_LIMIT_PER_SECOND,
+    CONF_OPT_DEVICE_RATE_LIMIT_MAX_TOKENS,
+    CONF_OPT_DEVICE_RATE_LIMIT_PER_SECOND,
+    CONF_OPT_DEVICE_MAX_COMMAND_QUEUE,
     CONF_HTTP_ENDPOINT, CONF_MQTT_SKIP_CERT_VALIDATION, HTTP_API_RE,
-    HTTP_UPDATE_INTERVAL, DEVICE_LIST_COORDINATOR, calculate_id, DEFAULT_USER_AGENT, CONF_OPT_CUSTOM_USER_AGENT,
-    CONF_OVERRIDE_MQTT_ENDPOINT, CONF_OPT_LAN, CONF_OPT_LAN_MQTT_ONLY, TRANSPORT_MODES_TO_ENUM
+    HTTP_UPDATE_INTERVAL, DEVICE_LIST_COORDINATOR, calculate_id
 )
 from .version import MEROSS_IOT_VERSION
 
+
 _LOGGER = logging.getLogger(__name__)
+
 
 CONFIG_SCHEMA = vol.Schema(
     {
@@ -62,7 +71,6 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Required(CONF_PASSWORD): cv.string,
                 vol.Required(CONF_MQTT_SKIP_CERT_VALIDATION): cv.boolean,
                 vol.Optional(CONF_STORED_CREDS): cv.string,
-                vol.Optional(CONF_OVERRIDE_MQTT_ENDPOINT): cv.string
             }
         )
     },
@@ -104,9 +112,7 @@ class MerossCoordinator(DataUpdateCoordinator):
                  password: str,
                  cached_creds: Optional[MerossCloudCreds],
                  mqtt_skip_cert_validation: bool,
-                 mqtt_override_address: Optional[Tuple[str, int]],
-                 update_interval: timedelta,
-                 ua_header: str):
+                 update_interval: timedelta):
 
         self._entry = config_entry
         self._http_api_endpoint = http_api_endpoint
@@ -114,16 +120,13 @@ class MerossCoordinator(DataUpdateCoordinator):
         self._password = password
         self._cached_creds = cached_creds
         self._skip_cert_validation = mqtt_skip_cert_validation
-        self._mqtt_override_address = mqtt_override_address
         self._setup_done = False
-        self._ua_header = ua_header
 
         # Objects not to be initialized here
         self._client = None
         self._manager = None
 
-        super().__init__(hass=hass, logger=_LOGGER, name="meross_http_coordinator", update_interval=update_interval,
-                         update_method=self._async_fetch_http_data)
+        super().__init__(hass=hass, logger=_LOGGER, name="meross_http_coordinator", update_interval=update_interval, update_method=self._async_fetch_http_data)
 
     async def _async_fetch_http_data(self):
         try:
@@ -151,7 +154,6 @@ class MerossCoordinator(DataUpdateCoordinator):
                 email=self._email,
                 password=self._password,
                 stored_creds=self._cached_creds,
-                ua_header=self._ua_header
             )
         except (BadLoginException, TokenExpiredException, UnauthorizedException) as err:
             raise ConfigEntryAuthFailed from err
@@ -180,7 +182,6 @@ class MerossCoordinator(DataUpdateCoordinator):
         # Now that we are logged in at HTTP api level, instantiate the manager.
         self._manager = MerossManager(
             http_client=self._client,
-            mqtt_override_server=self._mqtt_override_address,
             auto_reconnect=True,
             mqtt_skip_cert_validation=self._skip_cert_validation,
         )
@@ -221,8 +222,7 @@ class MerossDevice(Entity):
 
         base_name = f"{device.name} ({device.type})"
         if supplementary_classifiers is not None:
-            self._id = calculate_id(platform=platform, uuid=device.internal_id, channel=channel,
-                                    supplementary_classifiers=supplementary_classifiers)
+            self._id = calculate_id(platform=platform, uuid=device.internal_id, channel=channel, supplementary_classifiers=supplementary_classifiers)
             base_name += f" " + " ".join(supplementary_classifiers)
         else:
             self._id = calculate_id(platform=platform, uuid=device.internal_id, channel=channel)
@@ -246,7 +246,7 @@ class MerossDevice(Entity):
 
     def _http_data_changed(self) -> None:
         new_data = self._coordinator.data.get(self._device.uuid)
-        if self._last_http_state is not None and self._last_http_state.online_status != OnlineStatus.ONLINE and new_data.online_status == OnlineStatus.ONLINE:
+        if self._last_http_state is not None and self._last_http_state.online_status!=OnlineStatus.ONLINE and new_data.online_status==OnlineStatus.ONLINE:
             self._last_http_state = new_data
             self.async_schedule_update_ha_state(force_refresh=True)
         else:
@@ -321,20 +321,19 @@ class MerossDevice(Entity):
 
 
 async def get_or_renew_creds(
-        email: str,
-        password: str,
-        stored_creds: MerossCloudCreds = None,
-        http_api_url: str = "https://iot.meross.com",
-        ua_header: str = DEFAULT_USER_AGENT
+    email: str,
+    password: str,
+    stored_creds: MerossCloudCreds = None,
+    http_api_url: str = "https://iot.meross.com",
 ) -> Tuple[MerossHttpClient, List[HttpDeviceInfo], bool]:
     try:
         if stored_creds is None:
             http_client = await MerossHttpClient.async_from_user_password(
-                email=email, password=password, api_base_url=http_api_url, ua_header=ua_header
+                email=email, password=password, api_base_url=http_api_url
             )
         else:
             http_client = MerossHttpClient(
-                cloud_credentials=stored_creds, api_base_url=http_api_url, ua_header=ua_header
+                cloud_credentials=stored_creds, api_base_url=http_api_url
             )
 
         # Test device listing. If goes ok, return it immediately. There is no need to update the credentials
@@ -350,7 +349,7 @@ async def get_or_renew_creds(
 
         # Build a new client with username/password rather than using stored credentials
         http_client = await MerossHttpClient.async_from_user_password(
-            email=email, password=password, api_base_url=http_api_url, ua_header=ua_header
+            email=email, password=password, api_base_url=http_api_url
         )
         http_devices = await http_client.async_list_devices()
 
@@ -359,9 +358,9 @@ async def get_or_renew_creds(
 
 def _http_info_changed(known: Collection[HttpDeviceInfo], discovered: Collection[HttpDeviceInfo]) -> bool:
     """Tells when a new device is discovered among the known ones"""
-    known_ids = [dev.uuid for dev in known]
-    unknown = [dev for dev in discovered if dev.uuid not in known_ids]
-    return len(unknown) > 0
+    known_ids = [ dev.uuid for dev in known ]
+    unknown = [ dev for dev in discovered if dev.uuid not in known_ids]
+    return len(unknown)>0
 
 
 async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry):
@@ -387,9 +386,6 @@ async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry):
     mqtt_skip_cert_validation = config_entry.data.get(CONF_MQTT_SKIP_CERT_VALIDATION, True)
     _LOGGER.warning("Skip MQTT cert validation option set to: %s", mqtt_skip_cert_validation)
 
-    mqtt_override_address = config_entry.data.get(CONF_OVERRIDE_MQTT_ENDPOINT)
-    _LOGGER.info("Override MQTT address set to: %s", "no" if mqtt_override_address else "yes -> %s" % mqtt_override_address)
-
     # Make sure we have all the needed requirements
     if http_api_endpoint is None or HTTP_API_RE.fullmatch(http_api_endpoint) is None:
         raise ConfigEntryAuthFailed("Missing or wrong HTTP_API_ENDPOINT")
@@ -397,10 +393,6 @@ async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry):
         raise ConfigEntryAuthFailed("Missing USERNAME/EMAIL parameter from configuration")
     if password is None:
         raise ConfigEntryAuthFailed("Missing PASSWORD parameter from configuration")
-    if mqtt_override_address is not None:
-        mqtt_host = mqtt_override_address.split(":")[0]
-        mqtt_port = int(mqtt_override_address.split(":")[1])
-        mqtt_override_address = (mqtt_host, mqtt_port)
 
     creds = None
     if str_creds is not None:
@@ -424,13 +416,6 @@ async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry):
     # TODO: Is this still needed?
     hass.data[DOMAIN][HA_SENSOR] = dict()
 
-    # Retrieve options we need
-    ua_header = config_entry.options.get(CONF_OPT_CUSTOM_USER_AGENT, DEFAULT_USER_AGENT)
-    if ua_header == "" or not isinstance(ua_header, str):
-        _LOGGER.warning("Invalid user-agent option specified in config <%s>; defaulting to <%s>", str(ua_header),
-                        str(DEFAULT_USER_AGENT))
-        ua_header = DEFAULT_USER_AGENT
-
     try:
         # Setup the coordinator
         meross_coordinator = MerossCoordinator(
@@ -441,9 +426,7 @@ async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry):
             password=password,
             cached_creds=creds,
             mqtt_skip_cert_validation=mqtt_skip_cert_validation,
-            mqtt_override_address=mqtt_override_address,
             update_interval=timedelta(seconds=HTTP_UPDATE_INTERVAL),
-            ua_header=ua_header
         )
 
         # Initiate the coordinator. This method will also make sure to login to the API,
@@ -465,13 +448,11 @@ async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry):
             known_devices = manager.find_devices(device_uuids=discovered_devices.keys())
             if _http_info_changed(known_devices, discovered_devices.values()):
                 _LOGGER.info("The HTTP API has found new devices that were unknown to us. Triggering discovery.")
-                hass.create_task(manager.async_device_discovery(update_subdevice_status=True,
-                                                                cached_http_device_list=discovered_devices.values()))
+                hass.create_task(manager.async_device_discovery(update_subdevice_status=True, cached_http_device_list=discovered_devices.values()))
 
         # Register a handler for HTTP events so that we can check for new devices and trigger
         # a discovery when needed
         meross_coordinator.async_add_listener(_http_api_polled)
-        config_entry.async_on_unload(config_entry.add_update_listener(update_listener))
 
         return True
 
@@ -487,9 +468,9 @@ async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry):
     except (UnauthorizedException, HttpApiError) as ex:
         # Do not retry setup: user must update its credentials
         if ex is UnauthorizedException or ex.error_code in (
-                ErrorCodes.CODE_TOKEN_INVALID,
-                ErrorCodes.CODE_TOKEN_EXPIRED,
-                ErrorCodes.CODE_TOKEN_ERROR,
+            ErrorCodes.CODE_TOKEN_INVALID,
+            ErrorCodes.CODE_TOKEN_EXPIRED,
+            ErrorCodes.CODE_TOKEN_ERROR,
         ):
             raise ConfigEntryAuthFailed("Invalid token or credentials")
         else:
@@ -510,20 +491,6 @@ async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry):
             logger=_LOGGER,
         )
         raise ConfigEntryNotReady()
-
-
-async def update_listener(hass, entry):
-    """Handle options update."""
-    # Update options
-    custom_ua = entry.options.get(CONF_OPT_CUSTOM_USER_AGENT, DEFAULT_USER_AGENT)
-    transport_mode = entry.options.get(CONF_OPT_LAN, CONF_OPT_LAN_MQTT_ONLY)
-    manager_transport_mode = TRANSPORT_MODES_TO_ENUM[transport_mode]
-    manager: MerossManager = hass.data[DOMAIN][MANAGER]
-    manager.default_transport_mode = manager_transport_mode
-    # So far, the underlying Meross Library requires some "monkey patching" to set the
-    # http user agent to be used. It's not nice, but until a public setter gets exposed, we need
-    # to do so.
-    manager._http_client._ua_header = custom_ua
 
 
 async def async_unload_entry(hass, entry):

@@ -3,20 +3,12 @@ import re
 from typing import Dict, List
 
 from meross_iot.controller.device import BaseDevice
-from meross_iot.manager import TransportMode
 
-from . import version
 from .version import MEROSS_IOT_VERSION
 
 _LOGGER = logging.getLogger(__name__)
 
 # Constants
-MEROSS_CLOUD_API_URL = "https://iot.meross.com"
-MEROSS_LOCAL_API_URL = "http://homeassistant.local:2003"
-MEROSS_LOCAL_MQTT_BROKER_URI = "homeassistant.local:2001"
-MEROSS_LOCAL_MDNS_API_SERVICE_TYPE = "_meross-api._tcp.local."
-MEROSS_LOCAL_MDNS_MQTT_SERVICE_TYPE = "_meross-mqtt._tcp.local."
-MEROSS_LOCAL_MDNS_SERVICE_TYPES = [MEROSS_LOCAL_MDNS_API_SERVICE_TYPE, MEROSS_LOCAL_MDNS_MQTT_SERVICE_TYPE]
 DOMAIN = "meross_cloud"
 ATTR_CONFIG = "config"
 MANAGER = "manager"
@@ -36,25 +28,19 @@ CONNECTION_TIMEOUT_THRESHOLD = 5
 
 CONF_STORED_CREDS = "stored_credentials"
 CONF_MQTT_SKIP_CERT_VALIDATION = "skip_mqtt_cert_validation"
-CONF_OVERRIDE_MQTT_ENDPOINT = "override_mqtt_endpoint"
 CONF_HTTP_ENDPOINT = "http_api_endpoint"
-CONF_WORKING_MODE = "working_mode"
-CONF_WORKING_MODE_CLOUD_MODE = "cloud_mode"
-CONF_WORKING_MODE_LOCAL_MODE = "local_mode"
 
-UNKNOWN_ERROR = "unknown_error"
-MULTIPLE_BROKERS_FOUND = "multiple_brokers_found"
-MULTIPLE_APIS_FOUND = "multiple_apis_found"
-DIFFERENT_HOSTS_FOR_BROKER_AND_API = "different_hosts_for_broker_and_api"
+CONF_OPT_ENABLE_RATE_LIMITS = "enable_rate_limits"
+CONF_OPT_GLOBAL_RATE_LIMIT_MAX_TOKENS = "global_rate_limit_max_tokens"
+CONF_OPT_GLOBAL_RATE_LIMIT_PER_SECOND = "global_rate_limit_per_second"
+CONF_OPT_DEVICE_RATE_LIMIT_MAX_TOKENS = "device_rate_limit_max_tokens"
+CONF_OPT_DEVICE_RATE_LIMIT_PER_SECOND = "device_rate_limit_per_second"
+CONF_OPT_DEVICE_MAX_COMMAND_QUEUE = "device_max_command_queue"
 
-CONF_OPT_CUSTOM_USER_AGENT = "custom_user_agent"
-CONF_OPT_LAN = "lan_transport_mode"
-CONF_OPT_LAN_MQTT_ONLY = "conf_opt_lan_mqtt_only"
-CONF_OPT_LAN_HTTP_FIRST = "conf_opt_lan_http_first"
-CONF_OPT_LAN_HTTP_FIRST_ONLY_GET = "conf_opt_lan_http_first_only_get"
-
-HA_SENSOR_POLL_INTERVAL_SECONDS = 30     # HA sensor polling interval
-HTTP_UPDATE_INTERVAL = 120               # Meross Cloud "discovery" interval
+# Constants
+HA_SENSOR_POLL_INTERVAL_SECONDS = 15  # HA sensor polling interval
+SENSOR_SAMPLE_CACHE_INTERVAL_SECONDS = 30  # Sensors data caching interval in seconds
+HTTP_UPDATE_INTERVAL = 30
 UNIT_PERCENTAGE = "%"
 
 ATTR_API_CALLS_PER_SECOND = "api_calls_per_second"
@@ -62,14 +48,6 @@ ATTR_DELAYED_API_CALLS_PER_SECOND = "delayed_api_calls_per_second"
 ATTR_DROPPED_API_CALLS_PER_SECOND = "dropped_api_calls_per_second"
 
 HTTP_API_RE = re.compile("(http:\/\/|https:\/\/)?([^:]+)(:([0-9]+))?")
-
-DEFAULT_USER_AGENT = f"MerossHA/{version.MEROSS_INTEGRATION_VERSION}"
-
-TRANSPORT_MODES_TO_ENUM = {
-    CONF_OPT_LAN_MQTT_ONLY: TransportMode.MQTT_ONLY,
-    CONF_OPT_LAN_HTTP_FIRST: TransportMode.LAN_HTTP_FIRST,
-    CONF_OPT_LAN_HTTP_FIRST_ONLY_GET: TransportMode.LAN_HTTP_FIRST_ONLY_GET
-}
 
 
 def calculate_id(platform: str, uuid: str, channel: int, supplementary_classifiers: List[str] = None) -> str:
