@@ -166,10 +166,10 @@ automation:
     alias: Limpiar casa
     description: ""
     trigger:
-      - at:
-        "12:00"
-        "19:00"
-        platform: time
+      - platform: time
+        at:
+          - "12:00"
+          - "19:00"
     condition:
       - condition: time
         weekday:
