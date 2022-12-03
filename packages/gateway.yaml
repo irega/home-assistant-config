@@ -9,22 +9,22 @@ homeassistant:
       friendly_name: Gateway entrada
 
 automation:
-  # - id: "1578413858931"
-  #   alias: Reproducir sonido al abrir puerta entrada
-  #   description: ""
-  #   trigger:
-  #     - entity_id: binary_sensor.door_window_sensor_158d0003ce68d2
-  #       from: "off"
-  #       platform: state
-  #       to: "on"
-  #   condition:
-  #     - condition: template
-  #       value_template: "{{ not is_state('alarm_control_panel.house', 'armed_home') }}"
-  #     - condition: template
-  #       value_template: "{{ not is_state('alarm_control_panel.house', 'armed_away') }}"
-  #   action:
-  #     - data:
-  #         gw_mac: !secret aqara_gateway_mac
-  #         ringtone_id: 10
-  #         ringtone_vol: 5
-  #       service: xiaomi_aqara.play_ringtone
+  - id: "1578413858931"
+    alias: Reproducir sonido al abrir puerta entrada
+    description: ""
+    trigger:
+      - entity_id: binary_sensor.door_window_sensor_158d0003ce68d2
+        from: "off"
+        platform: state
+        to: "on"
+    condition:
+      - condition: template
+        value_template: "{{ not is_state('alarm_control_panel.house', 'armed_home') }}"
+      - condition: template
+        value_template: "{{ not is_state('alarm_control_panel.house', 'armed_away') }}"
+    action:
+      - data:
+          gw_mac: !secret aqara_gateway_mac
+          ringtone_id: 10
+          ringtone_vol: 5
+        service: xiaomi_aqara.play_ringtone
