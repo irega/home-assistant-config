@@ -301,20 +301,20 @@ views:
         type: media-control
     path: cocina
     title: Cocina
-  - badges: []
-    cards:
-      - entities:
-          - entity: light.luz_bano_1
-          - entity: light.luz_bano_2
-        show_header_toggle: true
-        title: Luz espejo Baño
-        type: entities
-      - entity: light.luz_bano_1
-        type: light
-      - entity: light.luz_bano_2
-        type: light
-    path: bano
-    title: Baño
+  # - badges: []
+  #   cards:
+  #     - entities:
+  #         - entity: light.luz_bano_1
+  #         - entity: light.luz_bano_2
+  #       show_header_toggle: true
+  #       title: Luz espejo Baño
+  #       type: entities
+  #     - entity: light.luz_bano_1
+  #       type: light
+  #     - entity: light.luz_bano_2
+  #       type: light
+  #   path: bano
+  #   title: Baño
   - badges: []
     cards:
       - entity: switch.shelly1_40f5202d3117

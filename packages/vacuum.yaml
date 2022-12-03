@@ -166,7 +166,8 @@ automation:
     alias: Limpiar casa
     description: ""
     trigger:
-      - at: "19:00"
+      - at: "12:00"
+        at: "19:00"
         platform: time
     condition:
       - condition: time
