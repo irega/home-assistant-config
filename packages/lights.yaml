@@ -1,10 +1,3 @@
-light:
-  - platform: group
-    name: Luz espejo Baño
-    entities:
-      - light.luz_bano_1
-      - light.luz_bano_2
-
 homeassistant:
   customize:
     switch.plug_158d000310c4a0:

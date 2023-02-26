@@ -11,17 +11,21 @@
       "unknown_error": "Si è verificato un errore inatteso",
       "api_connection_refused": "Impossibile connettersi al server API. Controlla l'indirizzo del server.",
       "client_connection_error": "Si è verificato un errore durante la connessione alle API HTTP",
-      "missing_credentials": "Per favore inserire le credenziali di accesso"
+      "missing_credentials": "Per favore inserire le credenziali di accesso",
+      "mdns_lookup_failed": "La ricerca automatica non è stata in grado di identificare gli indirizzi dei servizi API/MQTT. Sono stati inseriti quelli di default."
     },
     "step": {
       "user": {
+        "title": "Seleziona il broker",
+        "data": {}
+      },
+      "configure_manager": {
         "data": {
           "password": "Password",
           "username": "Indirizzo Email",
           "http_api_endpoint": "Endpoint HTTP",
-          "mqtt_hostname": "Hostname Server MQTT",
-          "mqtt_port": "Porta Server MQTT",
-          "skip_mqtt_cert_validation": "Skip MQTT certificate validation checks"
+          "override_mqtt_endpoint": "Indirizzo MQTT (host:port)",
+          "skip_mqtt_cert_validation": "Salta la validazione SSL per MQTT"
         },
         "title": "Inserisci le credenziali del tuo account Meross"
       },
@@ -33,19 +37,15 @@
     "title": "Meross"
   },
   "options": {
-        "error": {},
-        "step": {
-            "init": {
-                "data": {
-                    "enable_rate_limits": "Abilita il limitatore dei comandi MQTT",
-                    "global_rate_limit_max_tokens": "Limite burst rate globale",
-                    "global_rate_limit_per_second": "Limite di comandi al secondo globale",
-                    "device_rate_limit_max_tokens": "Limite burst rate per singolo dispositivo",
-                    "device_rate_limit_per_second": "Limite di comandi al secondo per singolo dispositivo",
-                    "device_max_command_queue": "Massimo numero di comandi in coda per singolo dispositivo"
-                },
-                "title": "Configure Manager"
-            }
-        }
+    "error": {},
+    "step": {
+      "init": {
+        "data": {
+          "custom_user_agent": "Header User-Agent personalizzato",
+          "lan_transport_mode": "Opzioni di comunicazione con i dispositivi"
+        },
+        "title": "Opzioni Meross Cloud"
+      }
     }
+  }
 }
