@@ -26,6 +26,7 @@ import uuid
 from aiohttp import web
 
 from collections import OrderedDict
+from typing import Union
 
 from homeassistant.const         import (
     ## SERVICES ##
@@ -41,7 +42,7 @@ from homeassistant.const         import (
     CONF_DISARM_AFTER_TRIGGER,
     STATE_ON, STATE_OFF,
     ATTR_ENTITY_ID, ATTR_CODE,
-    EVENT_STATE_CHANGED, EVENT_TIME_CHANGED
+    EVENT_STATE_CHANGED
     )
 
 from operator                    import attrgetter
@@ -50,9 +51,16 @@ from homeassistant.util.dt       import utcnow                       as now
 from homeassistant.loader        import bind_hass
 from homeassistant.helpers.event import async_track_point_in_time
 from homeassistant.helpers.event import async_track_state_change
-from homeassistant.util          import sanitize_path
 from homeassistant.exceptions    import HomeAssistantError
 from homeassistant.components.http import HomeAssistantView
+from homeassistant.helpers.event import async_track_time_interval
+
+# sanitize_path replaced by raise_if_invalid_path from 2021.12.0b1
+if float(current_HA_version) < 2021.12:
+    from homeassistant.util          import sanitize_path
+else:
+    from homeassistant.util          import raise_if_invalid_path
+
 
 import homeassistant.components.alarm_control_panel                  as parent
 try:
@@ -74,7 +82,6 @@ import homeassistant.components.switch                               as switch
 import homeassistant.helpers.config_validation                       as cv
 
 try:
-    from homeassistant.util.ruamel_yaml import JSON_TYPE
     from ruamel.yaml            import YAML
     from ruamel.yaml.error      import YAMLError
 
@@ -440,9 +447,6 @@ async def async_setup_platform(hass, config, async_add_devices, discovery_info=N
         alarm.alarm_arm_away_from_panel(service.data.get(ATTR_CODE))
 
     alarm = BWAlarm(hass, config, mqtt)
-    hass.bus.async_listen(EVENT_STATE_CHANGED, alarm.state_change_listener)
-    hass.bus.async_listen(EVENT_TIME_CHANGED, alarm.time_change_listener)
-    hass.bus.async_listen(EVENT_TIME_CHANGED, alarm.passcode_timeout_listener)
     async_add_devices([alarm])
 
     hass.services.async_register('alarm_control_panel', SERVICE_ALARM_SET_IGNORE_OPEN_SENSORS, async_alarm_set_ignore_open_sensors, SET_IGNORE_OPEN_SENSORS_SCHEMA)
@@ -454,6 +458,10 @@ async def async_setup_platform(hass, config, async_add_devices, discovery_info=N
     hass.services.async_register('alarm_control_panel', SERVICE_ALARM_ARM_HOME_FROM_PANEL, alarm_arm_home_from_panel, parent.ALARM_SERVICE_SCHEMA)
     hass.services.async_register('alarm_control_panel', SERVICE_ALARM_ARM_AWAY_FROM_PANEL, alarm_arm_away_from_panel, parent.ALARM_SERVICE_SCHEMA)
 
+    hass.bus.async_listen(EVENT_STATE_CHANGED, alarm.state_change_listener)
+    async_track_time_interval(hass, alarm.time_change_listener, datetime.timedelta(seconds=1)) # call the listener every second
+    async_track_time_interval(hass, alarm.passcode_timeout_listener, datetime.timedelta(seconds=1))
+    
     _LOGGER.debug("{} end".format(FNAME))
 
 class BwResources(HomeAssistantView):
@@ -477,11 +485,21 @@ class BwResources(HomeAssistantView):
 
     async def get(self, request, path):
         """Retrieve file."""
-        safe_path = sanitize_path(path)
-        if path != safe_path:
-            raise web.HTTPBadRequest
-        override_path = "{}/{}".format(self.override_folder, safe_path)
-        default_path = "{}/{}".format(self.default_folder, safe_path)
+        # check if path is valid
+        # use sanitize_path for older HA versions
+        if float(current_HA_version) < 2021.12:
+            safe_path = sanitize_path(path)
+            if path != safe_path:
+                raise web.HTTPBadRequest
+        else:
+            # and raise_if_invalid_path for HA > 2021.11
+            try:
+                raise_if_invalid_path(path)
+            except ValueError as err:
+                raise web.HTTPBadRequest
+
+        override_path = "{}/{}".format(self.override_folder, path)
+        default_path = "{}/{}".format(self.default_folder, path)
 
         if os.path.exists(override_path):
             return web.FileResponse(override_path)
@@ -725,8 +743,8 @@ class BWAlarm(AlarmControlPanelEntity):
         return self._config[CONF_CODE_TO_ARM]
 
     @property
-    def device_state_attributes(self):
-        FNAME = '[device_state_attributes]'
+    def extra_state_attributes(self):
+        FNAME = '[extra_state_attributes]'
         _LOGGER.debug("{}".format(FNAME))
 
         results = {
@@ -788,6 +806,12 @@ class BWAlarm(AlarmControlPanelEntity):
             results[CONF_STATES] = self._config[CONF_STATES]
 
         return results;
+
+    # device_state_attributes was replaced by extra_state_attributes in 2021.6 and deprecated in 2021.12
+    if float(current_HA_version) < 2021.12:
+        @property
+        def device_state_attributes(self):
+            return self.extra_state_attributes;
 
     @property
     def supported_features(self) -> int:
@@ -889,7 +913,7 @@ class BWAlarm(AlarmControlPanelEntity):
         self.settings_yaml_save()
         _LOGGER.debug("{} end ".format(FNAME))
 
-    def _save_yaml(self, fname: str, data: JSON_TYPE) -> None:
+    def _save_yaml(self, fname: str, data: Union[list, dict, str]) -> None:
         """Save a YAML file."""
         tmp_fname = fname + "__TEMP__"
         try:
