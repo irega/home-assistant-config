@@ -45,7 +45,7 @@ sensor:
         icon_template: "{{ states.vacuum.robot_aspirador.attributes.battery_icon }}"
       vacuum_cleaning_time:
         friendly_name: Ultimo ciclo
-        value_template: "{{ states('sensor.robot_aspirador_last_clean_duration') }}"
+        value_template: "{{ states('sensor.robot_aspirador_last_clean_duration')|int|timestamp_custom('%M:%S', false) }}"
         icon_template: "mdi:timer"
       vacuum_cleaned_area:
         friendly_name: Area ultimo ciclo
@@ -55,22 +55,22 @@ sensor:
       vacuum_cleanmainbrush:
         friendly_name: Reemplazo cepillo principal
         unit_of_measurement: "h"
-        value_template: "Cepillo principal: {{ states('sensor.robot_aspirador_main_brush_left') }}"
+        value_template: "Cepillo principal: {{ [0, states('sensor.robot_aspirador_main_brush_left')|round] | max }}"
         icon_template: "mdi:screwdriver"
       vacuum_cleansidebrush:
         friendly_name: Reemplazo cepillo lateral
         unit_of_measurement: "h"
-        value_template: "Cepillo lateral: {{ states('sensor.robot_aspirador_side_brush_left') }}"
+        value_template: "Cepillo lateral: {{ [0, states('sensor.robot_aspirador_side_brush_left')|round] | max }}"
         icon_template: "mdi:screwdriver"
       vacuum_cleanfilter:
         friendly_name: Reemplazo filtro
         unit_of_measurement: "h"
-        value_template: "Filtro: {{ states('sensor.robot_aspirador_filter_left') }}"
+        value_template: "Filtro: {{ [0, states('sensor.robot_aspirador_filter_left')|round] | max }}"
         icon_template: "mdi:screwdriver"
       vacuum_sensordirtyleft:
         friendly_name: Limpieza sensores
         unit_of_measurement: "h"
-        value_template: "Sensores: {{ states('sensor.robot_aspirador_sensor_dirty_left') }}"
+        value_template: "Sensores: {{ [0, states('sensor.robot_aspirador_sensor_dirty_left')|round] | max }}"
         icon_template: "mdi:screwdriver"
       vacuum_operation:
         friendly_name: Estado
