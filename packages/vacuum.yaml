@@ -20,7 +20,7 @@ sensor:
         friendly_name: Estado
         value_template: >
           {% if not state_attr("vacuum.robot_aspirador","status") == none %}
-            "Estado: {{ states.vacuum.robot_aspirador.attributes.status }}"
+            Estado: {{ states.vacuum.robot_aspirador.attributes.status }}
           {% endif %}
         icon_template: >
           {% if not state_attr("vacuum.robot_aspirador","status") == none %}
@@ -47,12 +47,15 @@ sensor:
         friendly_name: Bateria
         value_template: "Bateria: {{ states.vacuum.robot_aspirador.attributes.battery_level }}"
         unit_of_measurement: "%"
-        icon_template: "{{ states.vacuum.robot_aspirador.attributes.battery_icon }}"
+        icon_template: >
+          {% if not state_attr("vacuum.robot_aspirador","battery_icon") == none %}
+            {{ states.vacuum.robot_aspirador.attributes.battery_icon }}
+          {% endif %}
       vacuum_cleaning_time:
         friendly_name: Ultimo ciclo
         value_template: >
           {% if not states('sensor.robot_aspirador_last_clean_duration') == 'unavailable' %}
-            "{{ states('sensor.robot_aspirador_last_clean_duration')|int|timestamp_custom('%M:%S', false) }}"
+            {{ states('sensor.robot_aspirador_last_clean_duration')|int|timestamp_custom('%M:%S', false) }}
           {% endif %}
         icon_template: "mdi:timer"
       vacuum_cleaned_area:
@@ -60,7 +63,7 @@ sensor:
         unit_of_measurement: "m ²"
         value_template: >
           {% if not states('sensor.robot_aspirador_last_clean_area') == 'unavailable' %}
-            "{{ states('sensor.robot_aspirador_last_clean_area')|int|timestamp_custom('%M:%S', false) }}"
+            {{ states('sensor.robot_aspirador_last_clean_area') }}
           {% endif %}
         icon_template: "mdi:ruler"
       vacuum_cleanmainbrush:
