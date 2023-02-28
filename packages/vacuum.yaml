@@ -45,8 +45,7 @@ sensor:
         icon_template: "mdi:speedometer"
       vacuum_battery:
         friendly_name: Bateria
-        value_template: "Bateria: {{ states.vacuum.robot_aspirador.attributes.battery_level }}"
-        unit_of_measurement: "%"
+        value_template: "Bateria: {{ states.vacuum.robot_aspirador.attributes.battery_level }}%"
         icon_template: >
           {% if not state_attr("vacuum.robot_aspirador","battery_icon") == none %}
             {{ states.vacuum.robot_aspirador.attributes.battery_icon }}
