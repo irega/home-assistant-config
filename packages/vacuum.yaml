@@ -68,9 +68,9 @@ sensor:
         unit_of_measurement: "m ²"
         value_template: >
           {% if not states('sensor.robot_aspirador_last_clean_area') == 'unavailable' %}
-            states('sensor.robot_aspirador_last_clean_area') 
+            {{ states('sensor.robot_aspirador_last_clean_area') | float }} 
           {% else %}
-            0
+            {{ 0 | float }}
           {% endif %}
         icon_template: "mdi:ruler"
       vacuum_cleanmainbrush:
