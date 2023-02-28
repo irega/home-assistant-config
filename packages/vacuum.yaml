@@ -45,43 +45,33 @@ sensor:
         icon_template: "{{ states.vacuum.robot_aspirador.attributes.battery_icon }}"
       vacuum_cleaning_time:
         friendly_name: Ultimo ciclo
-        value_template: "{{ states.vacuum.robot_aspirador.attributes.cleaning_time }}"
+        value_template: "{{ states('sensor.robot_aspirador_last_clean_duration') }}"
         icon_template: "mdi:timer"
       vacuum_cleaned_area:
         friendly_name: Area ultimo ciclo
         unit_of_measurement: "m ²"
-        value_template: "{{ states.vacuum.robot_aspirador.attributes.cleaned_area }}"
+        value_template: "{{ states('sensor.robot_aspirador_last_clean_area') }}"
         icon_template: "mdi:ruler"
       vacuum_cleanmainbrush:
         friendly_name: Reemplazo cepillo principal
         unit_of_measurement: "h"
-        value_template: "Cepillo principal: {{ states.vacuum.robot_aspirador.attributes.main_brush_left }}"
+        value_template: "Cepillo principal: {{ states('sensor.robot_aspirador_main_brush_left') }}"
         icon_template: "mdi:screwdriver"
       vacuum_cleansidebrush:
         friendly_name: Reemplazo cepillo lateral
         unit_of_measurement: "h"
-        value_template: "Cepillo lateral: {{ states.vacuum.robot_aspirador.attributes.side_brush_left }}"
+        value_template: "Cepillo lateral: {{ states('sensor.robot_aspirador_side_brush_left') }}"
         icon_template: "mdi:screwdriver"
       vacuum_cleanfilter:
         friendly_name: Reemplazo filtro
         unit_of_measurement: "h"
-        value_template: "Filtro: {{ states.vacuum.robot_aspirador.attributes.filter_left }}"
+        value_template: "Filtro: {{ states('sensor.robot_aspirador_filter_left') }}"
         icon_template: "mdi:screwdriver"
       vacuum_sensordirtyleft:
         friendly_name: Limpieza sensores
         unit_of_measurement: "h"
-        value_template: "Sensores: {{ states.vacuum.robot_aspirador.attributes.sensor_dirty_left }}"
+        value_template: "Sensores: {{ states('sensor.robot_aspirador_sensor_dirty_left') }}"
         icon_template: "mdi:screwdriver"
-      vacuum_do_not_disturb:
-        friendly_name: No molestar
-        value_template: "{{ states.vacuum.robot_aspirador.attributes.do_not_disturb }}"
-        icon_template: >
-          {% set val =  states.vacuum.robot_aspirador.attributes.do_not_disturb  %}
-          {% if val == 'on' %}
-            mdi:do-not-disturb
-          {% else %}
-            mdi:do-not-disturb-off
-          {% endif %}
       vacuum_operation:
         friendly_name: Estado
         value_template: "Estado"

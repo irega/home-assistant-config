@@ -21,7 +21,6 @@ views:
     title: Entrada/Pasillo
   - badges:
       - entity: sensor.vacuum_status
-      - entity: sensor.vacuum_do_not_disturb
       - entity: sensor.vacuum_cleaning_time
       - entity: sensor.vacuum_cleaned_area
       - entity: sensor.vacuum_cleaner_error_sensor
@@ -301,20 +300,6 @@ views:
         type: media-control
     path: cocina
     title: Cocina
-  # - badges: []
-  #   cards:
-  #     - entities:
-  #         - entity: light.luz_bano_1
-  #         - entity: light.luz_bano_2
-  #       show_header_toggle: true
-  #       title: Luz espejo Baño
-  #       type: entities
-  #     - entity: light.luz_bano_1
-  #       type: light
-  #     - entity: light.luz_bano_2
-  #       type: light
-  #   path: bano
-  #   title: Baño
   - badges: []
     cards:
       - entity: switch.shelly1_40f5202d3117
