@@ -41,11 +41,17 @@ sensor:
           {% endif %}
       vacuum_fan_speed:
         friendly_name: Velocidad ventilador
-        value_template: "Modo: {{ states.vacuum.robot_aspirador.attributes.fan_speed }}"
+        value_template: >
+          {% if not state_attr("vacuum.robot_aspirador","fan_speed") == none %}
+            Modo: {{ states.vacuum.robot_aspirador.attributes.fan_speed }}
+          {% endif %}         
         icon_template: "mdi:speedometer"
       vacuum_battery:
         friendly_name: Bateria
-        value_template: "Bateria: {{ states.vacuum.robot_aspirador.attributes.battery_level }}%"
+        value_template: >
+          {% if not state_attr("vacuum.robot_aspirador","battery_level") == none %}
+            Bateria: {{ states.vacuum.robot_aspirador.attributes.battery_level }}%
+          {% endif %}         
         icon_template: >
           {% if not state_attr("vacuum.robot_aspirador","battery_icon") == none %}
             {{ states.vacuum.robot_aspirador.attributes.battery_icon }}
@@ -68,22 +74,34 @@ sensor:
       vacuum_cleanmainbrush:
         friendly_name: Reemplazo cepillo principal
         unit_of_measurement: "h"
-        value_template: "Cepillo principal: {{ [0, states('sensor.robot_aspirador_main_brush_left')|round] | max }}"
+        value_template: >
+          {% if not states('sensor.robot_aspirador_last_clean_area') == 'unavailable' %}
+            Cepillo principal: {{ [0, states('sensor.robot_aspirador_main_brush_left')|round] | max }}
+          {% endif %}
         icon_template: "mdi:screwdriver"
       vacuum_cleansidebrush:
         friendly_name: Reemplazo cepillo lateral
         unit_of_measurement: "h"
-        value_template: "Cepillo lateral: {{ [0, states('sensor.robot_aspirador_side_brush_left')|round] | max }}"
+        value_template: >
+          {% if not states('sensor.robot_aspirador_last_clean_area') == 'unavailable' %}
+            Cepillo lateral: {{ [0, states('sensor.robot_aspirador_side_brush_left')|round] | max }}
+          {% endif %}
         icon_template: "mdi:screwdriver"
       vacuum_cleanfilter:
         friendly_name: Reemplazo filtro
         unit_of_measurement: "h"
-        value_template: "Filtro: {{ [0, states('sensor.robot_aspirador_filter_left')|round] | max }}"
+        value_template: >
+          {% if not states('sensor.robot_aspirador_last_clean_area') == 'unavailable' %}
+            Filtro: {{ [0, states('sensor.robot_aspirador_filter_left')|round] | max }}
+          {% endif %}
         icon_template: "mdi:screwdriver"
       vacuum_sensordirtyleft:
         friendly_name: Limpieza sensores
         unit_of_measurement: "h"
-        value_template: "Sensores: {{ [0, states('sensor.robot_aspirador_sensor_dirty_left')|round] | max }}"
+        value_template: >
+          {% if not states('sensor.robot_aspirador_last_clean_area') == 'unavailable' %}
+            Sensores: {{ [0, states('sensor.robot_aspirador_sensor_dirty_left')|round] | max }}
+          {% endif %}      
         icon_template: "mdi:screwdriver"
       vacuum_operation:
         friendly_name: Estado
