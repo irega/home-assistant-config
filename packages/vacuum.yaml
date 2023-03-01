@@ -129,6 +129,9 @@ automation:
       - entity_id: sensor.vacuum_status
         platform: state
         to: "Estado: Charging problem"
+      - entity_id: vacuum.robot_aspirador
+        platform: state
+        to: error
     action:
       - data:
           message:
