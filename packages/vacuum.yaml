@@ -120,8 +120,15 @@ automation:
   - id: ASPIRADORA Notificar ERROR
     alias: Notificar error aspirador
     trigger:
-      condition: template
-      value_template: "{% if not is_state('sensor.vacuum_cleaner_error_sensor', 'No Error') %}true{% endif %}"
+      - entity_id: sensor.vacuum_status
+        platform: state
+        to: "Estado: Error"
+      - entity_id: sensor.vacuum_status
+        platform: state
+        to: "Estado: Device offline"
+      - entity_id: sensor.vacuum_status
+        platform: state
+        to: "Estado: Charging problem"
     action:
       - data:
           message:
