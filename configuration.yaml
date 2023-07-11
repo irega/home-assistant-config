@@ -9,6 +9,7 @@ homeassistant:
   time_zone: !secret time_zone
   packages: !include_dir_named packages
   country: ES
+  external_url: !secret base_url
 
 lovelace:
   mode: yaml
@@ -19,7 +20,6 @@ lovelace:
 http:
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
-  base_url: !secret base_url
 
 zone:
 wake_on_lan:
@@ -31,4 +31,4 @@ alexa:
 tts:
   - platform: google_translate
 
-# alarm_control_panel: !include resources/bwalarm/bwalarm.yaml
+alarm_control_panel: !include resources/bwalarm/bwalarm.yaml
