@@ -6,7 +6,7 @@ homeassistant:
       friendly_name: Sensor movimiento pasillo
     sensor.illumination_04cf8cf312cd:
       friendly_name: Sensor iluminación pasillo
-    climate.netatmo_smart_thermostat:
+    climate.salon:
       friendly_name: Termostato
 
 automation:

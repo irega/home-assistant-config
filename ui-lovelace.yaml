@@ -40,7 +40,7 @@ views:
           - sensor.purificador_aire_motor_speed
           - sensor.purificador_aire_pm2_5
           - sensor.purificador_aire_temperature
-      - entity: climate.netatmo_smart_thermostat
+      - entity: climate.salon
         type: thermostat
       - entity: switch.shellyplug_s_26722d
         hold_action:
